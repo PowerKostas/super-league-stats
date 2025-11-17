@@ -1,0 +1,35 @@
+.root {
+    -fx-background-image: url("../Images/backgroundImage.png");
+    -fx-background-size: cover;
+}
+
+.menu-button, .exit-button {
+    -fx-background-color: rgba(255, 255, 255, 0.4);
+    -fx-background-radius: 10;
+
+    -fx-border-color: rgba(255, 255, 255, 0.6);
+    -fx-border-radius: 10;
+
+    -fx-font-family: "Rockwell Bold";
+    -fx-font-size: 50px;
+    -fx-text-fill: white;
+
+    -fx-pref-width: 300;
+    -fx-pref-height: 100;
+}
+
+.menu-button:hover, .exit-button:hover {
+    -fx-cursor: hand;
+    -fx-border-color: white;
+
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.menu-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.6);
+}
+
+.exit-button:hover {
+    -fx-background-color: rgba(255, 80, 80, 0.8);
+}

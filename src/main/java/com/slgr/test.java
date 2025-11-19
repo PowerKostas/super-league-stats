@@ -4,7 +4,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.ResultSet;
 import io.github.cdimascio.dotenv.Dotenv;
+import java.util.*;
 
 public class test {
     public static void main(String[] args) throws SQLException {
@@ -16,12 +18,18 @@ public class test {
         String dbPassword = dotenv.get("DB_PASSWORD");
 
 
-        // Connects to the database and executes the queries
+        // Connects to the database and executes the query
         Connection connection = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
         Statement statement = connection.createStatement();
 
-        String query = "UPDATE coaches SET nationality = 'Spain' WHERE coach_name = 'José Luis Mendilibar'";
+        String query = "SELECT * FROM get_team_name_logo()";
+        ResultSet results = statement.executeQuery(query);
 
-        statement.executeUpdate(query);
+
+        // Prints the results
+        while (results.next()) {
+            String teamName = results.getString("team_name");
+            String teamLogo = results.getString("logo_link");
+        }
     }
 }

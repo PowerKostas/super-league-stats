@@ -9,7 +9,7 @@ import java.io.IOException;
 public class leagueApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(leagueApplication.class.getResource("Views/menu-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(leagueApplication.class.getResource("Views/info-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
 
         stage.setScene(scene);

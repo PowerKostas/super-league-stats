@@ -6,10 +6,10 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
 
-public class leagueApplication extends Application {
+public class LeagueApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(leagueApplication.class.getResource("Views/info-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(LeagueApplication.class.getResource("Views/menu-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
 
         stage.setScene(scene);

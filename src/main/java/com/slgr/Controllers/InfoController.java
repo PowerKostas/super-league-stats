@@ -5,10 +5,13 @@ import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import com.slgr.Utils.SetupInfoTeams;
 import java.util.ArrayList;
+import com.slgr.Utils.Widgets;
 
 public class InfoController {
     @FXML
@@ -30,7 +33,7 @@ public class InfoController {
         ResultSet team_logo_name_id_results = statement.executeQuery(query);
 
 
-        // Extracts data row by row and sets up logos, team names and checkboxes on the left side of the page
+        // Extracts data row by row and sets up logos, team names, checkboxes and CRUD buttons on the left side of the page
         while (team_logo_name_id_results.next()) {
             String tempLogoLink = team_logo_name_id_results.getString("logo_link");
             String tempTeamName = team_logo_name_id_results.getString("team_name");
@@ -40,5 +43,14 @@ public class InfoController {
             HBox row = SetupInfoTeams.getRow(tempLogoLink, tempTeamName, tempTeamId);
             leftVBox.getChildren().add(row);
         }
+
+        Label createButton = Widgets.createCreateButton("Add Teams");
+
+        Label pushToDatabaseButton = Widgets.createPushToDatabaseButton("Push To Database");
+
+        HBox row = new HBox(20);
+        row.setAlignment(Pos.CENTER_LEFT);
+        row.getChildren().addAll(createButton, pushToDatabaseButton);
+        leftVBox.getChildren().add(row);
     }
 }

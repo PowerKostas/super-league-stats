@@ -4,14 +4,15 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import com.slgr.Utils.SetupInfoTeams;
-import java.util.ArrayList;
 import com.slgr.Utils.Widgets;
+import java.util.ArrayList;
 
 public class InfoController {
     @FXML
@@ -27,6 +28,12 @@ public class InfoController {
 
 
     public void initialize() throws SQLException {
+        // Removes ugly focusing behavior when starting up the app
+        Platform.runLater(() -> {
+            leftVBox.requestFocus();
+        });
+
+
         // Executes queries to get data from the database
         String query = "SELECT * FROM get_team_logo_name_id()";
         Statement statement = connection.createStatement();
@@ -40,17 +47,15 @@ public class InfoController {
             int tempTeamId = team_logo_name_id_results.getInt("team_id");
 
             // Puts the HBox row in the scrollable VBox
-            HBox row = SetupInfoTeams.getRow(tempLogoLink, tempTeamName, tempTeamId);
+            HBox row = SetupInfoTeams.createRow(tempLogoLink, tempTeamName, tempTeamId);
             leftVBox.getChildren().add(row);
         }
 
-        Label createButton = Widgets.createCreateButton("Add Teams");
-
-        Label pushToDatabaseButton = Widgets.createPushToDatabaseButton("Push To Database");
+        Label pushToDatabaseButton = Widgets.createPushToDatabaseButton("Push Changes To Database");
 
         HBox row = new HBox(20);
-        row.setAlignment(Pos.CENTER_LEFT);
-        row.getChildren().addAll(createButton, pushToDatabaseButton);
+        row.setAlignment(Pos.CENTER);
+        row.getChildren().addAll(pushToDatabaseButton);
         leftVBox.getChildren().add(row);
     }
 }

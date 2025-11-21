@@ -9,10 +9,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import com.slgr.Controllers.InfoController;
-import com.slgr.Utils.Widgets;
 
 public class SetupInfoTeams {
-    public static HBox getRow(String tempLogoLink, String tempTeamName, int tempTeamId) {
+    public static HBox createRow(String tempLogoLink, String tempTeamName, int tempTeamId) {
         Image image = new Image(SetupInfoTeams.class.getResource("/com/slgr/Images/Logos/" + tempLogoLink).toString());
         ImageView imageView = new ImageView();
         imageView.setImage(image);
@@ -25,6 +24,7 @@ public class SetupInfoTeams {
         textField.setText(tempTeamName);
         textField.setStyle("-fx-font-family: Rockwell; -fx-font-size: 24px; -fx-background-color: transparent;");
         textField.setPrefWidth(250);
+        textField.setEditable(false);
 
 
         // Shows selected teams data, when checked

@@ -19,7 +19,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 public class MenuController {
     @FXML
-    Text loadingText;
+    private Text loadingText;
 
 
     public Connection connectToDatabase() {
@@ -43,7 +43,6 @@ public class MenuController {
         }
     }
 
-
     public void infoButton(Event event) {
         loadingText.setText("Loading...");
 
@@ -54,9 +53,13 @@ public class MenuController {
 
            try {
                if (connection != null) { // Successful connection to the database
-                   InfoController.setConnection(connection);
                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/slgr/Views/info-view.fxml"));
                    Parent root = loader.load();
+
+                   // Calls the start function, after the initialize function is done
+                   InfoController infoController = loader.getController();
+                   infoController.start(connection);
+
                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                    Scene scene = stage.getScene();
                    scene.setRoot(root);
@@ -71,13 +74,14 @@ public class MenuController {
                }
            }
 
-           catch (IOException ex) {
+           catch (IOException | SQLException ex) {
 
            }
         });
 
         pause.play();
     }
+
 
     public void exitButton() {
         Platform.exit();

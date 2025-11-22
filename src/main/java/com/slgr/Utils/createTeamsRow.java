@@ -2,17 +2,16 @@ package com.slgr.Utils;
 
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import com.slgr.Controllers.InfoController;
+import java.util.ArrayList;
 
-public class SetupInfoTeams {
-    public static HBox createRow(String tempLogoLink, String tempTeamName, int tempTeamId) {
-        Image image = new Image(SetupInfoTeams.class.getResource("/com/slgr/Images/Logos/" + tempLogoLink).toString());
+public class createTeamsRow {
+    public static HBox get(String tempLogoLink, String tempTeamName, int tempTeamId, ArrayList<Integer> selectedTeamIds) {
+        Image image = new Image(createTeamsRow.class.getResource("/com/slgr/Images/Logos/" + tempLogoLink).toString());
         ImageView imageView = new ImageView();
         imageView.setImage(image);
         imageView.setFitHeight(75);
@@ -39,22 +38,19 @@ public class SetupInfoTeams {
         showSelectedCheckBox.setOnAction(e -> {
             int teamId = (int) showSelectedCheckBox.getUserData();
             if (showSelectedCheckBox.isSelected()) {
-                InfoController.selectedTeamIds.add(teamId);
+                selectedTeamIds.add(teamId);
             }
 
             else {
-                InfoController.selectedTeamIds.remove(Integer.valueOf(teamId));
+                selectedTeamIds.remove(Integer.valueOf(teamId));
             }
         });
-
-
-        Label deleteButton = Widgets.createDeleteButton("Delete Team");
 
 
         // Puts the 3 widgets in an HBox
         HBox row = new HBox(20);
         row.setAlignment(Pos.CENTER_LEFT);
-        row.getChildren().addAll(imageView, textField, showSelectedCheckBox, deleteButton);
+        row.getChildren().addAll(imageView, textField, showSelectedCheckBox);
 
         return row;
     }

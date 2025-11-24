@@ -58,7 +58,8 @@ public class MenuController {
 
                    // Calls the start function, after the initialize function is done
                    InfoController infoController = loader.getController();
-                   infoController.start(connection);
+                   infoController.setConnection(connection);
+                   infoController.makeTeamsVBox();
 
                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                    Scene scene = stage.getScene();

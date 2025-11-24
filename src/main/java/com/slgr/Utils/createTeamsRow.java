@@ -1,5 +1,6 @@
 package com.slgr.Utils;
 
+import com.slgr.Controllers.InfoController;
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
@@ -7,10 +8,11 @@ import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class createTeamsRow {
-    public static HBox get(String tempLogoLink, String tempTeamName, int tempTeamId, ArrayList<Integer> selectedTeamIds) {
+    public static HBox get(String tempLogoLink, String tempTeamName, int tempTeamId, ArrayList<Integer> selectedTeamIds, InfoController infoController) {
         Image image = new Image(createTeamsRow.class.getResource("/com/slgr/Images/Logos/" + tempLogoLink).toString());
         ImageView imageView = new ImageView();
         imageView.setImage(image);
@@ -32,17 +34,39 @@ public class createTeamsRow {
         tooltip1.setStyle("-fx-background-color: white; -fx-text-fill: black; -fx-font-size: 12px; -fx-border-color: #767676;");
         showSelectedCheckBox.setTooltip(tooltip1);
 
-        showSelectedCheckBox.setUserData(tempTeamId); // Every checkbox keeps the team id beneath it
+        // Make the starting state of all checkboxes logic checked
+        showSelectedCheckBox.setSelected(true);
+        selectedTeamIds.add(tempTeamId);
 
-        // Adds a click event to the checkbox to keep track of checked teams
+        try {
+            infoController.addRowsOwnersVBox(tempTeamId);
+        }
+
+        catch (SQLException e) {
+
+        }
+
+        // Every checkbox keeps the team id beneath it
+        showSelectedCheckBox.setUserData(tempTeamId);
+
+        // Adds a click event to the checkbox to keep track of checked teams and modify corresponding rows in the info view
         showSelectedCheckBox.setOnAction(e -> {
             int teamId = (int) showSelectedCheckBox.getUserData();
             if (showSelectedCheckBox.isSelected()) {
                 selectedTeamIds.add(teamId);
+
+                try {
+                    infoController.addRowsOwnersVBox(teamId);
+                }
+
+                catch (SQLException ex) {
+
+                }
             }
 
             else {
                 selectedTeamIds.remove(Integer.valueOf(teamId));
+                infoController.removeRowsOwnersVBox(teamId);
             }
         });
 

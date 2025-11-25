@@ -91,8 +91,24 @@ public class InfoController {
             Date tempDOB = ownersTableResults.getDate(5);
             int tempOwnerId = ownersTableResults.getInt(1);
 
-            HBox row = createOwnersRow.get(tempLogoLink, tempOwnerName, tempNationality, tempDOB, tempOwnerId, teamId);
-            ownersVBox.getChildren().add(row);
+            HBox row = createOwnersRow.get(tempLogoLink, tempOwnerName, tempNationality, tempDOB, tempOwnerId, teamId, connection);
+
+            // Does ordered insertion so when checking a team checkbox the table still appears in team id order
+            boolean inserted = false;
+            for (int i = 0; i < ownersVBox.getChildren().size(); i += 1) {
+                Node tempRow = ownersVBox.getChildren().get(i);
+                ArrayList<Integer> keys = (ArrayList<Integer>) tempRow.getUserData();
+
+                if (teamId < keys.get(1)) {
+                    ownersVBox.getChildren().add(i, row);
+                    inserted = true;
+                    break;
+                }
+            }
+
+            if (!inserted) {
+                ownersVBox.getChildren().add(row);
+            }
         }
     }
 

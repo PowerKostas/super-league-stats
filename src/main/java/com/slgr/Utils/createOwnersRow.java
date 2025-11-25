@@ -5,32 +5,121 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.control.Label;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class createOwnersRow {
-    public static HBox get(String tempLogoLink, String tempOwnerName, String tempNationality, Date tempDOB, int tempOwnerId, int teamId) {
+    public static HBox get(String tempLogoLink, String tempOwnerName, String tempNationality, Date tempDOB, int tempOwnerId, int teamId, Connection connection) {
         Image image = new Image(com.slgr.Utils.createTeamsRow.class.getResource("/com/slgr/Images/Logos/" + tempLogoLink).toString());
         ImageView imageView = new ImageView();
         imageView.setImage(image);
-        imageView.setFitHeight(40);
-        imageView.setFitWidth(40);
+        imageView.setFitHeight(35);
+        imageView.setFitWidth(35);
         imageView.setPreserveRatio(true);
 
 
         TextField textField1 = new TextField();
         textField1.setText(tempOwnerName);
-        textField1.setStyle("-fx-font-family: Rockwell; -fx-font-size: 24px; -fx-background-color: transparent;");
+        textField1.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-background-color: transparent;");
+
+        textField1.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {
+            if (isNowFocused) {
+                textField1.setUserData(textField1.getText());
+            }
+
+            else {
+                String originalValue = (String) textField1.getUserData();
+                String currentValue = textField1.getText();
+
+                if (!originalValue.equals(currentValue)) {
+                    try {
+                        String query = "CALL update_row_owners(?, ?, ?, ?, ?)";
+                        PreparedStatement statement = connection.prepareStatement(query);
+                        statement.setInt(1, tempOwnerId);
+                        statement.setInt(2, teamId);
+                        statement.setString(3, currentValue);
+                        statement.setNull(4, Types.VARCHAR);
+                        statement.setNull(5, Types.DATE);
+                        statement.executeUpdate();
+                    }
+
+                    catch (SQLException ex) {
+
+                    }
+                }
+            }
+        });
 
 
         TextField textField2 = new TextField();
         textField2.setText(tempNationality);
-        textField2.setStyle("-fx-font-family: Rockwell; -fx-font-size: 24px; -fx-background-color: transparent;");
+        textField2.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-background-color: transparent;");
+
+        textField2.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {
+            if (isNowFocused) {
+                textField2.setUserData(textField2.getText());
+            }
+
+            else {
+                String originalValue = (String) textField2.getUserData();
+                String currentValue = textField2.getText();
+
+                if (!originalValue.equals(currentValue)) {
+                    try {
+                        String query = "CALL update_row_owners(?, ?, ?, ?, ?)";
+                        PreparedStatement statement = connection.prepareStatement(query);
+                        statement.setInt(1, tempOwnerId);
+                        statement.setInt(2, teamId);
+                        statement.setNull(3, Types.VARCHAR);
+                        statement.setString(4, currentValue);
+                        statement.setNull(5, Types.DATE);
+                        statement.executeUpdate();
+                    }
+
+                    catch (SQLException ex) {
+
+                    }
+                }
+            }
+        });
 
 
         TextField textField3 = new TextField();
         textField3.setText(tempDOB.toString());
-        textField3.setStyle("-fx-font-family: Rockwell; -fx-font-size: 24px; -fx-background-color: transparent;");
+        textField3.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-background-color: transparent;");
+
+        textField3.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {
+            if (isNowFocused) {
+                textField3.setUserData(textField3.getText());
+            }
+
+            else {
+                String originalValue = (String) textField3.getUserData();
+                String currentValue = textField3.getText();
+
+                if (!originalValue.equals(currentValue)) {
+                    try {
+                        String query = "CALL update_row_owners(?, ?, ?, ?, ?)";
+                        PreparedStatement statement = connection.prepareStatement(query);
+                        statement.setInt(1, tempOwnerId);
+                        statement.setInt(2, teamId);
+                        statement.setNull(3, Types.VARCHAR);
+                        statement.setNull(4, Types.VARCHAR);
+                        statement.setDate(5, java.sql.Date.valueOf(currentValue));
+                        statement.executeUpdate();
+                    }
+
+                    catch (SQLException ex) {
+
+                    }
+                }
+            }
+        });
+
+
+        Label deleteButton = Widgets.createDeleteButton("Delete Owner", connection);
 
 
         // Puts the 4 widgets in an HBox
@@ -43,7 +132,7 @@ public class createOwnersRow {
         row.setUserData(keys);
 
         row.setAlignment(Pos.CENTER_LEFT);
-        row.getChildren().addAll(imageView, textField1, textField2, textField3);
+        row.getChildren().addAll(imageView, textField1, textField2, textField3, deleteButton);
 
         return row;
     }

@@ -43,10 +43,10 @@ public class Widgets {
     }
 
 
-    public static Label createCreateButton(String tooltip_text) {
+    public static Label createCreateButton(String tooltip_text, Connection connection) {
         Label createButton = new Label();
         createButton.setText("✚");
-        createButton.setStyle("-fx-font-size: 48px; -fx-text-fill: green;");
+        createButton.setStyle("-fx-font-size: 32px; -fx-text-fill: green;");
         Tooltip tooltip = new Tooltip(tooltip_text);
         tooltip.setStyle("-fx-background-color: white; -fx-text-fill: black; -fx-font-size: 12px; -fx-border-color: #767676;");
         createButton.setTooltip(tooltip);

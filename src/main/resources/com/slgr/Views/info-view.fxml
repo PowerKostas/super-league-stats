@@ -12,7 +12,7 @@
    <children>
       <StackPane>
          <children>
-            <Text fx:id="backButton" onMouseClicked="#backButton" fill="DODGERBLUE" stroke="BLACK" strokeType="OUTSIDE" text="◀">
+            <Text fx:id="backButton" fill="DODGERBLUE" onMouseClicked="#backButton" stroke="BLACK" strokeType="OUTSIDE" text="◀">
                <font>
                   <Font size="96.0" />
                </font>
@@ -48,10 +48,16 @@
                   </StackPane>
                   <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                      <content>
-                        <VBox fx:id="ownersVBox">
-                           <padding>
-                              <Insets left="5.0" />
-                           </padding></VBox>
+                        <VBox>
+                           <children>
+                              <VBox fx:id="ownersVBox">
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                              </VBox>
+                              <StackPane fx:id="ownersButton" prefHeight="150.0" prefWidth="200.0" />
+                           </children>
+                        </VBox>
                      </content>
                   </ScrollPane>
                </children>
@@ -69,10 +75,16 @@
                   </StackPane>
                   <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                     <content>
-                        <VBox fx:id="coachesVBox">
-                           <padding>
-                              <Insets left="5.0" />
-                           </padding></VBox>
+                        <VBox>
+                           <children>
+                              <VBox fx:id="coachesVBox">
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                              </VBox>
+                              <StackPane fx:id="coachesButton" prefHeight="150.0" prefWidth="200.0" />
+                           </children>
+                        </VBox>
                     </content>
                   </ScrollPane>
                </children>

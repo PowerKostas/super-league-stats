@@ -13,6 +13,8 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
@@ -31,15 +33,14 @@ public class InfoController {
     @FXML
     private VBox ownersVBox;
 
+    @FXML
+    private StackPane ownersButton;
+
     private ArrayList<Integer> selectedTeamIds = new ArrayList<>();
 
     private Connection connection;
     public void setConnection(Connection connection) {
         this.connection = connection;
-    }
-
-    public Connection getConnection() {
-        return connection;
     }
 
 
@@ -57,7 +58,6 @@ public class InfoController {
     public void makeTeamsVBox() throws SQLException {
         // Executes queries to get data from the database
         String query = "SELECT * FROM get_team_logo_name_id()";
-        Connection connection = getConnection();
         Statement statement = connection.createStatement();
         ResultSet teamLogoNameIdResults = statement.executeQuery(query);
 
@@ -76,10 +76,9 @@ public class InfoController {
 
 
     // Adds to the owners VBox the corresponding owner rows when the teams checkbox is checked
-    public void addRowsOwnersVBox(int teamId) throws SQLException {
+    public void addRowsOwners(int teamId) throws SQLException {
         // Repeats the process for the owners table
         String query = "SELECT * FROM get_owners_logo(" + teamId + ")";
-        Connection connection = getConnection();
         Statement statement = connection.createStatement();
         ResultSet ownersTableResults = statement.executeQuery(query);
 
@@ -95,7 +94,7 @@ public class InfoController {
 
             // Does ordered insertion so when checking a team checkbox the table still appears in team id order
             boolean inserted = false;
-            for (int i = 0; i < ownersVBox.getChildren().size(); i += 1) {
+            for (int i = 0; i < ownersVBox.getChildren().size() - 1; i += 1) {
                 Node tempRow = ownersVBox.getChildren().get(i);
                 ArrayList<Integer> keys = (ArrayList<Integer>) tempRow.getUserData();
 
@@ -113,11 +112,17 @@ public class InfoController {
     }
 
     //  Removes from the owners VBox the corresponding owner rows when the teams checkbox is unchecked
-    public void removeRowsOwnersVBox(int teamId) {
+    public void removeRowsOwners(int teamId) {
         ownersVBox.getChildren().removeIf(node -> {
             ArrayList<Integer> keys = (ArrayList<Integer>) node.getUserData();
             return teamId == keys.get(1); // keys.get(1) = team id of the row
         });
+    }
+
+
+    public void addCreateButtonOwners() {
+        Label createButton = Widgets.createCreateButton("Add Owners", connection);
+        ownersButton.getChildren().add(createButton);
     }
 
 

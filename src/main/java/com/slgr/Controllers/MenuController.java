@@ -56,10 +56,11 @@ public class MenuController {
                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/slgr/Views/info-view.fxml"));
                    Parent root = loader.load();
 
-                   // Calls the start function, after the initialize function is done
+                   // Calls the starting functions, after the initialize function is done
                    InfoController infoController = loader.getController();
                    infoController.setConnection(connection);
                    infoController.makeTeamsVBox();
+                   infoController.addCreateButtonOwners();
 
                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                    Scene scene = stage.getScene();

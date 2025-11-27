@@ -1,11 +1,11 @@
 package com.slgr.Utils;
 
-import javafx.geometry.Pos;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Priority;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +23,7 @@ public class createOwnersRow {
         TextField textField1 = new TextField();
         textField1.setText(tempOwnerName);
         textField1.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-background-color: transparent;");
+        HBox.setHgrow(textField1, Priority.ALWAYS);
 
         textField1.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {
             if (isNowFocused) {
@@ -33,7 +34,7 @@ public class createOwnersRow {
                 String originalValue = (String) textField1.getUserData();
                 String currentValue = textField1.getText();
 
-                if (!originalValue.equals(currentValue)) {
+                if (!java.util.Objects.equals(originalValue, currentValue)) {
                     try {
                         String query = "CALL update_row_owners(?, ?, ?, ?, ?)";
                         PreparedStatement statement = connection.prepareStatement(query);
@@ -56,6 +57,7 @@ public class createOwnersRow {
         TextField textField2 = new TextField();
         textField2.setText(tempNationality);
         textField2.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-background-color: transparent;");
+        HBox.setHgrow(textField2, Priority.ALWAYS);
 
         textField2.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {
             if (isNowFocused) {
@@ -66,7 +68,7 @@ public class createOwnersRow {
                 String originalValue = (String) textField2.getUserData();
                 String currentValue = textField2.getText();
 
-                if (!originalValue.equals(currentValue)) {
+                if (!java.util.Objects.equals(originalValue, currentValue)) {
                     try {
                         String query = "CALL update_row_owners(?, ?, ?, ?, ?)";
                         PreparedStatement statement = connection.prepareStatement(query);
@@ -87,8 +89,17 @@ public class createOwnersRow {
 
 
         TextField textField3 = new TextField();
-        textField3.setText(tempDOB.toString());
+
+        if (tempDOB != null) {
+            textField3.setText(tempDOB.toString());
+        }
+
+        else {
+            textField3.setText("");
+        }
+
         textField3.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-background-color: transparent;");
+        HBox.setHgrow(textField3, Priority.ALWAYS);
 
         textField3.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {
             if (isNowFocused) {
@@ -111,7 +122,7 @@ public class createOwnersRow {
                         statement.executeUpdate();
                     }
 
-                    catch (SQLException ex) {
+                    catch (SQLException | IllegalArgumentException ex) {
 
                     }
                 }
@@ -131,9 +142,7 @@ public class createOwnersRow {
         keys.add(teamId);
         row.setUserData(keys);
 
-        row.setAlignment(Pos.CENTER_LEFT);
         row.getChildren().addAll(imageView, textField1, textField2, textField3, deleteButton);
-
         return row;
     }
 }

@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.slgr.Controllers.InfoController">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.slgr.Controllers.InfoController">
    <children>
       <StackPane>
          <children>
@@ -24,7 +24,7 @@
       </StackPane>
       <ScrollPane fitToHeight="true" fitToWidth="true" pannable="true" prefWidth="400.0">
          <content>
-            <VBox fx:id="leftVBox" spacing="10.0">
+            <VBox fx:id="leftVBox" spacing="10.0" style="-fx-background-color: white;">
                <padding>
                   <Insets left="5.0" top="5.0" />
                </padding></VBox>
@@ -35,7 +35,7 @@
       </ScrollPane>
       <VBox HBox.hgrow="ALWAYS">
          <children>
-            <VBox prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+            <VBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                <children>
                   <StackPane>
                      <children>
@@ -46,23 +46,27 @@
                         </Text>
                      </children>
                   </StackPane>
-                  <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                  <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
                      <content>
-                        <VBox>
+                        <VBox style="-fx-background-color: white;">
                            <children>
+                              <HBox fx:id="ownersColumns">
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding></HBox>
                               <VBox fx:id="ownersVBox">
                                  <padding>
                                     <Insets left="5.0" />
                                  </padding>
                               </VBox>
-                              <StackPane fx:id="ownersButton" prefHeight="150.0" prefWidth="200.0" />
+                              <HBox fx:id="ownersButton" alignment="CENTER" />
                            </children>
                         </VBox>
                      </content>
                   </ScrollPane>
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+            <VBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                <children>
                   <StackPane>
                      <children>
@@ -73,23 +77,24 @@
                         </Text>
                      </children>
                   </StackPane>
-                  <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                  <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
                     <content>
-                        <VBox>
+                        <VBox style="-fx-background-color: white;">
                            <children>
+                              <HBox fx:id="coachesColumns" />
                               <VBox fx:id="coachesVBox">
                                  <padding>
                                     <Insets left="5.0" />
                                  </padding>
                               </VBox>
-                              <StackPane fx:id="coachesButton" prefHeight="150.0" prefWidth="200.0" />
+                              <HBox fx:id="coachesButton" />
                            </children>
                         </VBox>
                     </content>
                   </ScrollPane>
                </children>
             </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+            <VBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                <children>
                   <StackPane>
                      <children>
@@ -100,9 +105,9 @@
                         </Text>
                      </children>
                   </StackPane>
-                  <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                  <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
                      <content>
-                        <VBox fx:id="standingsVBox">
+                        <VBox fx:id="standingsVBox" style="-fx-background-color: white;">
                            <padding>
                               <Insets left="5.0" />
                            </padding></VBox>

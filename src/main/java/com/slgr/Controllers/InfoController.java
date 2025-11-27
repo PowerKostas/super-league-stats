@@ -14,7 +14,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
@@ -34,7 +36,10 @@ public class InfoController {
     private VBox ownersVBox;
 
     @FXML
-    private StackPane ownersButton;
+    private HBox ownersColumns;
+
+    @FXML
+    private HBox ownersButton;
 
     private ArrayList<Integer> selectedTeamIds = new ArrayList<>();
 
@@ -47,10 +52,12 @@ public class InfoController {
     public void initialize() {
         // Removes ugly focusing behavior when starting up the app
         Platform.runLater(() -> {
-            leftVBox.requestFocus();
+           leftVBox.requestFocus();
         });
 
         backButton.setCursor(Cursor.HAND);
+
+        addColumnsOwners();
     }
 
 
@@ -91,23 +98,7 @@ public class InfoController {
             int tempOwnerId = ownersTableResults.getInt(1);
 
             HBox row = createOwnersRow.get(tempLogoLink, tempOwnerName, tempNationality, tempDOB, tempOwnerId, teamId, connection);
-
-            // Does ordered insertion so when checking a team checkbox the table still appears in team id order
-            boolean inserted = false;
-            for (int i = 0; i < ownersVBox.getChildren().size() - 1; i += 1) {
-                Node tempRow = ownersVBox.getChildren().get(i);
-                ArrayList<Integer> keys = (ArrayList<Integer>) tempRow.getUserData();
-
-                if (teamId < keys.get(1)) {
-                    ownersVBox.getChildren().add(i, row);
-                    inserted = true;
-                    break;
-                }
-            }
-
-            if (!inserted) {
-                ownersVBox.getChildren().add(row);
-            }
+            HelperMethods.addRowSorted(ownersVBox, row);
         }
     }
 
@@ -120,8 +111,29 @@ public class InfoController {
     }
 
 
+    // Hacky way to add headers to owners VBox
+    public void addColumnsOwners() {
+        Image image = new Image(com.slgr.Utils.createTeamsRow.class.getResource("/com/slgr/Images/Logos/" + "1.png").toString());
+        ImageView imageView = new ImageView();
+        imageView.setImage(image);
+        imageView.setFitHeight(35);
+        imageView.setFitWidth(35);
+        imageView.setPreserveRatio(true);
+
+        TextField textField1 = HelperMethods.makeHeaderTextField("Name");
+        TextField textField2 = HelperMethods.makeHeaderTextField("Nationality");
+        TextField textField3 = HelperMethods.makeHeaderTextField("DOB");
+
+        Label deleteButton = Widgets.createDeleteButton("Delete Owner", connection);
+
+        ownersColumns.getChildren().addAll(imageView, textField1, textField2, textField3, deleteButton);
+        imageView.setVisible(false);
+        deleteButton.setVisible(false);
+    }
+
+
     public void addCreateButtonOwners() {
-        Label createButton = Widgets.createCreateButton("Add Owners", connection);
+        Label createButton = Widgets.createCreateButton("Add Owner", connection, selectedTeamIds);
         ownersButton.getChildren().add(createButton);
     }
 

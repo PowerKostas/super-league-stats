@@ -60,7 +60,6 @@ public class MenuController {
                    InfoController infoController = loader.getController();
                    infoController.setConnection(connection);
                    infoController.makeTeamsVBox();
-                   infoController.addCreateButtonOwners();
 
                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                    Scene scene = stage.getScene();

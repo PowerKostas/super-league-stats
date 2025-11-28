@@ -10,7 +10,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class Widgets {
-    public static Label createDeleteButton(String tooltip_text, Connection connection) {
+    public static Label createDeleteButton(String tooltip_text, Connection connection, String table) {
         Label deleteButton = new Label();
         deleteButton.setText("🗑");
         deleteButton.setStyle("-fx-font-size: 28px; -fx-text-fill: red;");
@@ -28,7 +28,7 @@ public class Widgets {
             parentVBox.getChildren().remove(row);
 
             ArrayList<Integer> keys = (ArrayList<Integer>) row.getUserData();
-            String query = "CALL delete_row_owners(" + keys.get(0) + "," + keys.get(1) + ")"; // keys.get(0) = owner id of the row, keys.get(1) = team id of the row
+            String query = "CALL delete_row_" + table + "(" + keys.get(0) + "," + keys.get(1) + ")"; // keys.get(0) = owner id of the row, keys.get(1) = team id of the row
             try {
                 PreparedStatement statement = connection.prepareStatement(query);
                 statement.executeUpdate();
@@ -43,7 +43,7 @@ public class Widgets {
     }
 
 
-    public static Label createCreateButton(String tooltip_text, Connection connection, ArrayList<Integer> selectedTeamIds) {
+    public static Label createCreateButton(String tooltip_text, String table, Connection connection, ArrayList<Integer> selectedTeamIds) {
         Label createButton = new Label();
         createButton.setText("✚");
         createButton.setStyle("-fx-font-size: 32px; -fx-text-fill: green;");
@@ -94,14 +94,14 @@ public class Widgets {
                 int teamId = (int) keys.get(1);
 
                 // Creates the new data id by get the current max data id for the selected team in the combobox and adds 1
-                int ownerId = 0;
+                int dataId = 0;
                 try {
-                    String query = "SELECT create_id_owners(" + teamId + ")";
+                    String query = "SELECT create_id_" + table + "(" + teamId + ")";
                     Statement statement = connection.createStatement();
-                    ResultSet coachIdResult = statement.executeQuery(query);
+                    ResultSet dataIdResult = statement.executeQuery(query);
 
-                    while (coachIdResult.next()) {
-                        ownerId = coachIdResult.getInt(1);
+                    while (dataIdResult.next()) {
+                        dataId = dataIdResult.getInt(1);
                     }
                 }
 
@@ -111,13 +111,10 @@ public class Widgets {
 
                 // Adds the new row in the database
                 try {
-                    String query = "CALL create_row_owners(?, ?, ?, ?, ?)";
+                    String query = "CALL create_row_" + table + "(?, ?)";
                     PreparedStatement statement = connection.prepareStatement(query);
-                    statement.setInt(1, ownerId);
+                    statement.setInt(1, dataId);
                     statement.setInt(2, teamId);
-                    statement.setNull(3, java.sql.Types.VARCHAR);
-                    statement.setNull(4, java.sql.Types.VARCHAR);
-                    statement.setNull(5, java.sql.Types.DATE);
                     statement.executeUpdate();
                 }
 
@@ -127,10 +124,10 @@ public class Widgets {
 
                 // Only adds the new row to the VBox if the team's checkbox is checked
                 if (selectedTeamIds.contains(teamId)) {
-                    HBox row = createOwnersRow.get(logoLink, null, null, null, ownerId, teamId, connection);
+                    HBox row = createOwnersCoachesRow.get(logoLink, null, null, null, dataId, teamId, connection, table);
                     VBox parentVBox = (VBox) buttonRow.getParent();
-                    VBox ownersVBox = (VBox) parentVBox.getChildren().get(1); // 1 = VBox with fx id: ownersVBox
-                    HelperMethods.addRowSorted(ownersVBox, row);
+                    VBox ownersCoachesVBox = (VBox) parentVBox.getChildren().get(1); // 1 = VBox with fx id: ownersVBox or VBox with fx id: coachesVBox
+                    HelperMethods.addRowSorted(ownersCoachesVBox, row, 1);
                 }
 
                 // Fixes layout

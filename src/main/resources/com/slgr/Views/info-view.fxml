@@ -110,7 +110,7 @@
                   </StackPane>
                   <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
                      <content>
-                        <VBox fx:id="standingsVBox" style="-fx-background-color: white;">
+                        <VBox style="-fx-background-color: white;">
                            <padding>
                               <Insets left="5.0" />
                            </padding>

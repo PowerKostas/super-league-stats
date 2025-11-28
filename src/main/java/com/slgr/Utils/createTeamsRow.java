@@ -39,7 +39,7 @@ public class createTeamsRow {
         selectedTeamIds.add(tempTeamId);
 
         try {
-            infoController.addRowsOwners(tempTeamId);
+            infoController.addRows(tempTeamId);
         }
 
         catch (SQLException e) {
@@ -56,7 +56,7 @@ public class createTeamsRow {
                 selectedTeamIds.add(teamId);
 
                 try {
-                    infoController.addRowsOwners(teamId);
+                    infoController.addRows(teamId);
                 }
 
                 catch (SQLException ex) {
@@ -66,7 +66,7 @@ public class createTeamsRow {
 
             else {
                 selectedTeamIds.remove(Integer.valueOf(teamId));
-                infoController.removeRowsOwners(teamId);
+                infoController.removeRows(teamId);
             }
         });
 

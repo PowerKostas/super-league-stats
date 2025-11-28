@@ -81,13 +81,16 @@
                     <content>
                         <VBox style="-fx-background-color: white;">
                            <children>
-                              <HBox fx:id="coachesColumns" />
+                              <HBox fx:id="coachesColumns">
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding></HBox>
                               <VBox fx:id="coachesVBox">
                                  <padding>
                                     <Insets left="5.0" />
                                  </padding>
                               </VBox>
-                              <HBox fx:id="coachesButton" />
+                              <HBox fx:id="coachesButton" alignment="CENTER" />
                            </children>
                         </VBox>
                     </content>

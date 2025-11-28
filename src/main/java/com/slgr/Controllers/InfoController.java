@@ -33,13 +33,22 @@ public class InfoController {
     private VBox leftVBox;
 
     @FXML
-    private VBox ownersVBox;
-
-    @FXML
     private HBox ownersColumns;
 
     @FXML
+    private VBox ownersVBox;
+
+    @FXML
     private HBox ownersButton;
+
+    @FXML
+    private HBox coachesColumns;
+
+    @FXML
+    private VBox coachesVBox;
+
+    @FXML
+    private HBox coachesButton;
 
     private ArrayList<Integer> selectedTeamIds = new ArrayList<>();
 
@@ -56,8 +65,6 @@ public class InfoController {
         });
 
         backButton.setCursor(Cursor.HAND);
-
-        addColumnsOwners();
     }
 
 
@@ -79,16 +86,20 @@ public class InfoController {
             HBox row = createTeamsRow.get(tempLogoLink, tempTeamName, tempTeamId, selectedTeamIds, this);
             leftVBox.getChildren().add(row);
         }
+
+
+        // Continues the code now that a connection has been established
+        addCreateButton();
+        callAddColumnsOwnersCoaches();
     }
 
 
-    // Adds to the owners VBox the corresponding owner rows when the teams checkbox is checked
-    public void addRowsOwners(int teamId) throws SQLException {
-        // Repeats the process for the owners table
+    // Adds to the owners, coaches VBox the corresponding rows when the teams checkbox is checked
+    public void addRows(int teamId) throws SQLException {
+        // Repeats the process for the owners, coaches table
         String query = "SELECT * FROM get_owners_logo(" + teamId + ")";
         Statement statement = connection.createStatement();
         ResultSet ownersTableResults = statement.executeQuery(query);
-
 
         while (ownersTableResults.next()) {
             String tempLogoLink = ownersTableResults.getString(6);
@@ -97,22 +108,40 @@ public class InfoController {
             Date tempDOB = ownersTableResults.getDate(5);
             int tempOwnerId = ownersTableResults.getInt(1);
 
-            HBox row = createOwnersRow.get(tempLogoLink, tempOwnerName, tempNationality, tempDOB, tempOwnerId, teamId, connection);
+            HBox row = createOwnersCoachesRow.get(tempLogoLink, tempOwnerName, tempNationality, tempDOB, tempOwnerId, teamId, connection, "owners");
             HelperMethods.addRowSorted(ownersVBox, row);
+        }
+
+
+        ownersTableResults = statement.executeQuery("SELECT * FROM get_coaches_logo(" + teamId + ")");
+        while (ownersTableResults.next()) {
+            String tempLogoLink = ownersTableResults.getString(6);
+            String tempCoachName = ownersTableResults.getString(3);
+            String tempNationality = ownersTableResults.getString(4);
+            Date tempDOB = ownersTableResults.getDate(5);
+            int tempCoachId = ownersTableResults.getInt(1);
+
+            HBox row = createOwnersCoachesRow.get(tempLogoLink, tempCoachName, tempNationality, tempDOB, tempCoachId, teamId, connection, "coaches");
+            HelperMethods.addRowSorted(coachesVBox, row);
         }
     }
 
-    //  Removes from the owners VBox the corresponding owner rows when the teams checkbox is unchecked
-    public void removeRowsOwners(int teamId) {
+    //  Removes from the owners, coaches VBox the corresponding rows when the teams checkbox is unchecked
+    public void removeRows(int teamId) {
         ownersVBox.getChildren().removeIf(node -> {
+            ArrayList<Integer> keys = (ArrayList<Integer>) node.getUserData();
+            return teamId == keys.get(1); // keys.get(1) = team id of the row
+        });
+
+        coachesVBox.getChildren().removeIf(node -> {
             ArrayList<Integer> keys = (ArrayList<Integer>) node.getUserData();
             return teamId == keys.get(1); // keys.get(1) = team id of the row
         });
     }
 
 
-    // Hacky way to add headers to owners VBox
-    public void addColumnsOwners() {
+    // Hacky way to add headers to the owners, coaches VBox
+    public void addColumnsOwnersCoaches(HBox targetColumns) {
         Image image = new Image(com.slgr.Utils.createTeamsRow.class.getResource("/com/slgr/Images/Logos/" + "1.png").toString());
         ImageView imageView = new ImageView();
         imageView.setImage(image);
@@ -124,17 +153,26 @@ public class InfoController {
         TextField textField2 = HelperMethods.makeHeaderTextField("Nationality");
         TextField textField3 = HelperMethods.makeHeaderTextField("DOB");
 
-        Label deleteButton = Widgets.createDeleteButton("Delete Owner", connection);
+        Label deleteButton = Widgets.createDeleteButton("Delete Owner", connection, null);
 
-        ownersColumns.getChildren().addAll(imageView, textField1, textField2, textField3, deleteButton);
         imageView.setVisible(false);
         deleteButton.setVisible(false);
+
+        targetColumns.getChildren().addAll(imageView, textField1, textField2, textField3, deleteButton);
+    }
+
+    public void callAddColumnsOwnersCoaches() {
+        addColumnsOwnersCoaches(ownersColumns);
+        addColumnsOwnersCoaches(coachesColumns);
     }
 
 
-    public void addCreateButtonOwners() {
-        Label createButton = Widgets.createCreateButton("Add Owner", connection, selectedTeamIds);
-        ownersButton.getChildren().add(createButton);
+    public void addCreateButton() {
+        Label createButtonOwners = Widgets.createCreateButton("Add Owner", "owners", connection, selectedTeamIds);
+        ownersButton.getChildren().add(createButtonOwners);
+
+        Label createButtonCoaches = Widgets.createCreateButton("Add Coach", "coaches", connection, selectedTeamIds);
+        coachesButton.getChildren().add(createButtonCoaches);
     }
 
 

@@ -10,8 +10,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class createOwnersRow {
-    public static HBox get(String tempLogoLink, String tempOwnerName, String tempNationality, Date tempDOB, int tempOwnerId, int teamId, Connection connection) {
+public class createOwnersCoachesRow {
+    public static HBox get(String tempLogoLink, String tempOwnerName, String tempNationality, Date tempDOB, int tempOwnerId, int teamId, Connection connection, String table) {
         Image image = new Image(com.slgr.Utils.createTeamsRow.class.getResource("/com/slgr/Images/Logos/" + tempLogoLink).toString());
         ImageView imageView = new ImageView();
         imageView.setImage(image);
@@ -36,7 +36,7 @@ public class createOwnersRow {
 
                 if (!java.util.Objects.equals(originalValue, currentValue)) {
                     try {
-                        String query = "CALL update_row_owners(?, ?, ?, ?, ?)";
+                        String query = "CALL update_row_" + table + "(?, ?, ?, ?, ?)";
                         PreparedStatement statement = connection.prepareStatement(query);
                         statement.setInt(1, tempOwnerId);
                         statement.setInt(2, teamId);
@@ -70,7 +70,7 @@ public class createOwnersRow {
 
                 if (!java.util.Objects.equals(originalValue, currentValue)) {
                     try {
-                        String query = "CALL update_row_owners(?, ?, ?, ?, ?)";
+                        String query = "CALL update_row_" + table +"(?, ?, ?, ?, ?)";
                         PreparedStatement statement = connection.prepareStatement(query);
                         statement.setInt(1, tempOwnerId);
                         statement.setInt(2, teamId);
@@ -112,7 +112,7 @@ public class createOwnersRow {
 
                 if (!originalValue.equals(currentValue)) {
                     try {
-                        String query = "CALL update_row_owners(?, ?, ?, ?, ?)";
+                        String query = "CALL update_row_" + table + "(?, ?, ?, ?, ?)";
                         PreparedStatement statement = connection.prepareStatement(query);
                         statement.setInt(1, tempOwnerId);
                         statement.setInt(2, teamId);
@@ -130,7 +130,7 @@ public class createOwnersRow {
         });
 
 
-        Label deleteButton = Widgets.createDeleteButton("Delete Owner", connection);
+        Label deleteButton = Widgets.createDeleteButton("Delete Owner", connection, table);
 
 
         // Puts the 4 widgets in an HBox

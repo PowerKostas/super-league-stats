@@ -20,10 +20,7 @@ public class createOwnersCoachesRow {
         imageView.setPreserveRatio(true);
 
 
-        TextField textField1 = new TextField();
-        textField1.setText(tempOwnerName);
-        textField1.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-background-color: transparent;");
-        HBox.setHgrow(textField1, Priority.ALWAYS);
+        TextField textField1 = HelperMethods.makeTextField(tempOwnerName);
 
         textField1.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {
             if (isNowFocused) {
@@ -54,10 +51,7 @@ public class createOwnersCoachesRow {
         });
 
 
-        TextField textField2 = new TextField();
-        textField2.setText(tempNationality);
-        textField2.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-background-color: transparent;");
-        HBox.setHgrow(textField2, Priority.ALWAYS);
+        TextField textField2 = HelperMethods.makeTextField(tempNationality);
 
         textField2.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {
             if (isNowFocused) {

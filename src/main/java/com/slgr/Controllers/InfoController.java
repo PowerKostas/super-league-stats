@@ -30,7 +30,7 @@ public class InfoController {
     private Text backButton;
 
     @FXML
-    private VBox leftVBox;
+    private VBox teamsVBox;
 
     @FXML
     private HBox ownersColumns;
@@ -50,6 +50,12 @@ public class InfoController {
     @FXML
     private HBox coachesButton;
 
+    @FXML
+    private HBox standingsColumns;
+
+    @FXML
+    private VBox standingsVBox;
+
     private ArrayList<Integer> selectedTeamIds = new ArrayList<>();
 
     private Connection connection;
@@ -61,7 +67,7 @@ public class InfoController {
     public void initialize() {
         // Removes ugly focusing behavior when starting up the app
         Platform.runLater(() -> {
-           leftVBox.requestFocus();
+           teamsVBox.requestFocus();
         });
 
         backButton.setCursor(Cursor.HAND);
@@ -84,13 +90,14 @@ public class InfoController {
 
             // Puts the HBox row in the scrollable VBox
             HBox row = createTeamsRow.get(tempLogoLink, tempTeamName, tempTeamId, selectedTeamIds, this);
-            leftVBox.getChildren().add(row);
+            teamsVBox.getChildren().add(row);
         }
 
 
         // Continues the code now that a connection has been established
         addCreateButton();
         callAddColumnsOwnersCoaches();
+        addColumnsStandings();
     }
 
 
@@ -109,20 +116,33 @@ public class InfoController {
             int tempOwnerId = ownersTableResults.getInt(1);
 
             HBox row = createOwnersCoachesRow.get(tempLogoLink, tempOwnerName, tempNationality, tempDOB, tempOwnerId, teamId, connection, "owners");
-            HelperMethods.addRowSorted(ownersVBox, row);
+            HelperMethods.addRowSorted(ownersVBox, row, 1);
         }
 
 
-        ownersTableResults = statement.executeQuery("SELECT * FROM get_coaches_logo(" + teamId + ")");
-        while (ownersTableResults.next()) {
-            String tempLogoLink = ownersTableResults.getString(6);
-            String tempCoachName = ownersTableResults.getString(3);
-            String tempNationality = ownersTableResults.getString(4);
-            Date tempDOB = ownersTableResults.getDate(5);
-            int tempCoachId = ownersTableResults.getInt(1);
+        ResultSet coachesTableResults = statement.executeQuery("SELECT * FROM get_coaches_logo(" + teamId + ")");
+        while (coachesTableResults.next()) {
+            String tempLogoLink = coachesTableResults.getString(6);
+            String tempCoachName = coachesTableResults.getString(3);
+            String tempNationality = coachesTableResults.getString(4);
+            Date tempDOB = coachesTableResults.getDate(5);
+            int tempCoachId = coachesTableResults.getInt(1);
 
             HBox row = createOwnersCoachesRow.get(tempLogoLink, tempCoachName, tempNationality, tempDOB, tempCoachId, teamId, connection, "coaches");
-            HelperMethods.addRowSorted(coachesVBox, row);
+            HelperMethods.addRowSorted(coachesVBox, row, 1);
+        }
+
+
+        ResultSet standingsTableResults = statement.executeQuery("SELECT * FROM get_standings_logo(" + teamId + ")");
+        while (standingsTableResults.next()) {
+            String tempLogoLink = standingsTableResults.getString(6);
+            String tempWins = standingsTableResults.getString(2);
+            String tempDraws = standingsTableResults.getString(3);
+            String tempLosses = standingsTableResults.getString(4);
+            String tempPoints = standingsTableResults.getString(5);
+
+            HBox row = createStandingsRow.get(tempLogoLink, tempWins, tempDraws, tempLosses, tempPoints, teamId);
+            HelperMethods.addRowSorted(standingsVBox, row, -1);
         }
     }
 
@@ -135,7 +155,12 @@ public class InfoController {
 
         coachesVBox.getChildren().removeIf(node -> {
             ArrayList<Integer> keys = (ArrayList<Integer>) node.getUserData();
-            return teamId == keys.get(1); // keys.get(1) = team id of the row
+            return teamId == keys.get(1);
+        });
+
+        standingsVBox.getChildren().removeIf(node -> {
+            int key = (int) node.getUserData();
+            return teamId == key;
         });
     }
 
@@ -149,9 +174,12 @@ public class InfoController {
         imageView.setFitWidth(35);
         imageView.setPreserveRatio(true);
 
-        TextField textField1 = HelperMethods.makeHeaderTextField("Name");
-        TextField textField2 = HelperMethods.makeHeaderTextField("Nationality");
-        TextField textField3 = HelperMethods.makeHeaderTextField("DOB");
+        TextField textField1 = HelperMethods.makeTextField("Name");
+        textField1.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
+        TextField textField2 = HelperMethods.makeTextField("Nationality");
+        textField2.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
+        TextField textField3 = HelperMethods.makeTextField("DOB");
+        textField3.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
 
         Label deleteButton = Widgets.createDeleteButton("Delete Owner", connection, null);
 
@@ -164,6 +192,31 @@ public class InfoController {
     public void callAddColumnsOwnersCoaches() {
         addColumnsOwnersCoaches(ownersColumns);
         addColumnsOwnersCoaches(coachesColumns);
+    }
+
+
+    // Repeats the process for the standings, players tables
+    public void addColumnsStandings() {
+        Image image = new Image(com.slgr.Utils.createTeamsRow.class.getResource("/com/slgr/Images/Logos/" + "1.png").toString());
+        ImageView imageView = new ImageView();
+        imageView.setImage(image);
+        imageView.setFitHeight(45);
+        imageView.setFitWidth(45);
+        imageView.setPreserveRatio(true);
+
+
+        TextField textField1 = HelperMethods.makeTextField("Wins");
+        textField1.setStyle("-fx-font-family: Rockwell; -fx-font-size: 24px; -fx-font-weight: bold; -fx-background-color: transparent;");
+        TextField textField2 = HelperMethods.makeTextField("Draws");
+        textField2.setStyle("-fx-font-family: Rockwell; -fx-font-size: 24px; -fx-font-weight: bold; -fx-background-color: transparent;");
+        TextField textField3 = HelperMethods.makeTextField("Losses");
+        textField3.setStyle("-fx-font-family: Rockwell; -fx-font-size: 24px; -fx-font-weight: bold; -fx-background-color: transparent;");
+        TextField textField4 = HelperMethods.makeTextField("Points");
+        textField4.setStyle("-fx-font-family: Rockwell; -fx-font-size: 24px; -fx-font-weight: bold; -fx-background-color: transparent;");
+
+        imageView.setVisible(false);
+        standingsColumns.setSpacing(100);
+        standingsColumns.getChildren().addAll(imageView, textField1, textField2, textField3, textField4);
     }
 
 

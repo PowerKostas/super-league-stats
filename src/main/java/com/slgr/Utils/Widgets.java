@@ -127,7 +127,7 @@ public class Widgets {
                     HBox row = createOwnersCoachesRow.get(logoLink, null, null, null, dataId, teamId, connection, table);
                     VBox parentVBox = (VBox) buttonRow.getParent();
                     VBox ownersCoachesVBox = (VBox) parentVBox.getChildren().get(1); // 1 = VBox with fx id: ownersVBox or VBox with fx id: coachesVBox
-                    HelperMethods.addRowSorted(ownersCoachesVBox, row);
+                    HelperMethods.addRowSorted(ownersCoachesVBox, row, 1);
                 }
 
                 // Fixes layout

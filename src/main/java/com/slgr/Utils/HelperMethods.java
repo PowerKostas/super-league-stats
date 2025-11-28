@@ -8,17 +8,18 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 
 public class HelperMethods {
-    public static void addRowSorted(VBox tempVBox, HBox row) {
-        // Does ordered insertion so when adding a row in the VBox, the table still appears in team id order
+    public static void addRowSorted(VBox tempVBox, HBox row, int modifier) {
+        // Does ordered insertion so when adding a row in the VBox, the table still appears in team id or points order
         ArrayList<Integer> keys = (ArrayList<Integer>) row.getUserData();
-        int teamId = keys.get(1);
+        int teamIdPoints = keys.get(1);
         boolean inserted = false;
 
-        for (int i = 0; i < tempVBox.getChildren().size() - 1; i += 1) {
+        for (int i = 0; i < tempVBox.getChildren().size(); i += 1) {
             Node tempRow = tempVBox.getChildren().get(i);
             keys = (ArrayList<Integer>) tempRow.getUserData();
+            int key = keys.get(1);
 
-            if (teamId < keys.get(1)) {
+            if (teamIdPoints * modifier < key * modifier) { // Modifier: 1 = Ascending Order | -1 = Descending Order
                 tempVBox.getChildren().add(i, row);
                 inserted = true;
                 break;
@@ -31,9 +32,9 @@ public class HelperMethods {
     }
 
 
-    public static TextField makeHeaderTextField(String text) {
+    public static TextField makeTextField(String text) {
         TextField textField = new TextField(text);
-        textField.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
+        textField.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-background-color: transparent;");
         textField.setEditable(false);
         HBox.setHgrow(textField, Priority.ALWAYS);
 

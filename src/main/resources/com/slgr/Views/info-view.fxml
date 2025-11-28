@@ -24,7 +24,7 @@
       </StackPane>
       <ScrollPane fitToHeight="true" fitToWidth="true" pannable="true" prefWidth="400.0">
          <content>
-            <VBox fx:id="leftVBox" spacing="10.0" style="-fx-background-color: white;">
+            <VBox fx:id="teamsVBox" spacing="10.0" style="-fx-background-color: white;">
                <padding>
                   <Insets left="5.0" top="5.0" />
                </padding></VBox>
@@ -33,7 +33,7 @@
             <Insets bottom="10.0" top="10.0" />
          </HBox.margin>
       </ScrollPane>
-      <VBox HBox.hgrow="ALWAYS">
+      <VBox spacing="10.0" HBox.hgrow="ALWAYS">
          <children>
             <VBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                <children>
@@ -41,7 +41,7 @@
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Owners">
                            <font>
-                              <Font name="Rockwell Bold" size="40.0" />
+                              <Font name="Rockwell Bold" size="30.0" />
                            </font>
                         </Text>
                      </children>
@@ -72,7 +72,7 @@
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Coaches">
                            <font>
-                              <Font name="Rockwell Bold" size="40.0" />
+                              <Font name="Rockwell Bold" size="30.0" />
                            </font>
                         </Text>
                      </children>
@@ -103,7 +103,7 @@
                      <children>
                         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Standings">
                            <font>
-                              <Font name="Rockwell Bold" size="40.0" />
+                              <Font name="Rockwell Bold" size="30.0" />
                            </font>
                         </Text>
                      </children>
@@ -113,7 +113,19 @@
                         <VBox fx:id="standingsVBox" style="-fx-background-color: white;">
                            <padding>
                               <Insets left="5.0" />
-                           </padding></VBox>
+                           </padding>
+                           <children>
+                              <HBox fx:id="standingsColumns" prefHeight="100.0" prefWidth="200.0">
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                              </HBox>
+                              <VBox fx:id="standingsVBox" prefHeight="200.0" prefWidth="100.0">
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                              </VBox>
+                           </children></VBox>
                      </content>
                      <VBox.margin>
                         <Insets bottom="10.0" />

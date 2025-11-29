@@ -33,7 +33,7 @@
             <Insets bottom="10.0" top="10.0" />
          </HBox.margin>
       </ScrollPane>
-      <VBox spacing="10.0" HBox.hgrow="ALWAYS">
+      <VBox fx:id="firstPage" spacing="10.0" HBox.hgrow="ALWAYS">
          <children>
             <VBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                <children>
@@ -127,22 +127,58 @@
                               </VBox>
                            </children></VBox>
                      </content>
-                     <VBox.margin>
-                        <Insets bottom="10.0" />
-                     </VBox.margin>
                   </ScrollPane>
                </children>
             </VBox>
          </children>
-         <padding>
-            <Insets left="10.0" />
-         </padding></VBox>
+         <HBox.margin>
+            <Insets bottom="10.0" left="10.0" />
+         </HBox.margin></VBox>
+      <VBox fx:id="secondPage" spacing="10.0" HBox.hgrow="ALWAYS">
+         <children>
+            <VBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <StackPane>
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Players">
+                           <font>
+                              <Font name="Rockwell Bold" size="30.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </StackPane>
+                  <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
+                     <content>
+                        <VBox style="-fx-background-color: white;">
+                           <children>
+                              <HBox fx:id="playersColumns">
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                              </HBox>
+                              <VBox fx:id="playersVBox">
+                                 <padding>
+                                    <Insets left="5.0" />
+                                 </padding>
+                              </VBox>
+                              <HBox fx:id="playersButton" alignment="CENTER" />
+                           </children>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
+               </children>
+            </VBox>
+         </children>
+         <HBox.margin>
+            <Insets bottom="10.0" left="10.0" />
+         </HBox.margin>
+      </VBox>
       <StackPane>
          <padding>
             <Insets left="10.0" />
          </padding>
          <children>
-            <Text fill="DODGERBLUE" stroke="BLACK" strokeType="OUTSIDE" text="▶">
+            <Text fx:id="forwardButton" fill="DODGERBLUE" onMouseClicked="#forwardButton" stroke="BLACK" strokeType="OUTSIDE" text="▶">
                <font>
                   <Font size="96.0" />
                </font>

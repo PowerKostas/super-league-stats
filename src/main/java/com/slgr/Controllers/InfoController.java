@@ -30,6 +30,15 @@ public class InfoController {
     private Text backButton;
 
     @FXML
+    private Text forwardButton;
+
+    @FXML
+    private VBox firstPage;
+
+    @FXML
+    private VBox secondPage;
+
+    @FXML
     private VBox teamsVBox;
 
     @FXML
@@ -56,6 +65,15 @@ public class InfoController {
     @FXML
     private VBox standingsVBox;
 
+    @FXML
+    private HBox playersColumns;
+
+    @FXML
+    private VBox playersVBox;
+
+    @FXML
+    private HBox playersButton;
+
     private ArrayList<Integer> selectedTeamIds = new ArrayList<>();
 
     private Connection connection;
@@ -65,12 +83,17 @@ public class InfoController {
 
 
     public void initialize() {
-        // Removes ugly focusing behavior when starting up the app
+        // Removes ugly focusing behavior
         Platform.runLater(() -> {
            teamsVBox.requestFocus();
         });
 
+        // First page = owners, coaches, standings table | Second page = players table
+        secondPage.setVisible(false);
+        secondPage.setManaged(false);
+
         backButton.setCursor(Cursor.HAND);
+        forwardButton.setCursor(Cursor.HAND);
     }
 
 
@@ -98,6 +121,7 @@ public class InfoController {
         addCreateButton();
         callAddColumnsOwnersCoaches();
         addColumnsStandings();
+        addColumnsPlayers();
     }
 
 
@@ -144,6 +168,23 @@ public class InfoController {
             HBox row = createStandingsRow.get(tempLogoLink, tempWins, tempDraws, tempLosses, tempPoints, teamId);
             HelperMethods.addRowSorted(standingsVBox, row, -1);
         }
+
+
+        ResultSet playersTableResults = statement.executeQuery("SELECT * FROM get_players_logo(" + teamId + ")");
+        while (playersTableResults.next()) {
+            String logoLink = playersTableResults.getString(10);
+            String playerName = playersTableResults.getString(3);
+            String playerPosition = playersTableResults.getString(4);
+            int age = playersTableResults.getInt(5);
+            String nationality = playersTableResults.getString(6);
+            int appearances = playersTableResults.getInt(7);
+            int goals = playersTableResults.getInt(8);
+            int assists = playersTableResults.getInt(9);
+            int playerId = playersTableResults.getInt(1);
+
+            HBox row = createPlayersRow.get(logoLink, playerName, playerPosition, age, nationality, appearances, goals, assists, playerId, teamId, connection);
+            HelperMethods.addRowSorted(playersVBox, row, 1);
+        }
     }
 
     //  Removes from the owners, coaches VBox the corresponding rows when the teams checkbox is unchecked
@@ -159,13 +200,18 @@ public class InfoController {
         });
 
         standingsVBox.getChildren().removeIf(node -> {
-            int key = (int) node.getUserData();
-            return teamId == key;
+            ArrayList<Integer> keys = (ArrayList<Integer>) node.getUserData();
+            return teamId == keys.get(0);
+        });
+
+        playersVBox.getChildren().removeIf(node -> {
+            ArrayList<Integer> keys = (ArrayList<Integer>) node.getUserData();
+            return teamId == keys.get(1);
         });
     }
 
 
-    // Hacky way to add headers to the owners, coaches VBox
+    // Hacky way (it copies the structure of the actual HBox row) to add headers to the owners, coaches VBox
     public void addColumnsOwnersCoaches(HBox targetColumns) {
         Image image = new Image(com.slgr.Utils.createTeamsRow.class.getResource("/com/slgr/Images/Logos/" + "1.png").toString());
         ImageView imageView = new ImageView();
@@ -176,12 +222,15 @@ public class InfoController {
 
         TextField textField1 = HelperMethods.makeTextField("Name");
         textField1.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
+        textField1.setEditable(false);
         TextField textField2 = HelperMethods.makeTextField("Nationality");
         textField2.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
+        textField2.setEditable(false);
         TextField textField3 = HelperMethods.makeTextField("DOB");
         textField3.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
+        textField3.setEditable(false);
 
-        Label deleteButton = Widgets.createDeleteButton("Delete Owner", connection, null);
+        Label deleteButton = Widgets.createDeleteButton("", connection, null);
 
         imageView.setVisible(false);
         deleteButton.setVisible(false);
@@ -204,7 +253,6 @@ public class InfoController {
         imageView.setFitWidth(45);
         imageView.setPreserveRatio(true);
 
-
         TextField textField1 = HelperMethods.makeTextField("Wins");
         textField1.setStyle("-fx-font-family: Rockwell; -fx-font-size: 24px; -fx-font-weight: bold; -fx-background-color: transparent;");
         TextField textField2 = HelperMethods.makeTextField("Draws");
@@ -220,20 +268,93 @@ public class InfoController {
     }
 
 
+    public void addColumnsPlayers() {
+        Image image = new Image(com.slgr.Utils.createTeamsRow.class.getResource("/com/slgr/Images/Logos/" + "1.png").toString());
+        ImageView imageView = new ImageView();
+        imageView.setImage(image);
+        imageView.setFitHeight(35);
+        imageView.setFitWidth(35);
+        imageView.setPreserveRatio(true);
+
+        TextField textField1 = HelperMethods.makeTextField("Name");
+        textField1.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
+        textField1.prefWidthProperty().bind(playersColumns.widthProperty().multiply(0.275));
+
+        TextField textField2 = HelperMethods.makeTextField("Position");
+        textField2.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
+        textField2.prefWidthProperty().bind(playersColumns.widthProperty().multiply(0.2));
+
+        TextField textField3 = HelperMethods.makeTextField("Age");
+        textField3.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
+        textField3.prefWidthProperty().bind(playersColumns.widthProperty().multiply(0.075));
+
+        TextField textField4 = HelperMethods.makeTextField("Nationality");
+        textField4.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
+        textField4.prefWidthProperty().bind(playersColumns.widthProperty().multiply(0.2));
+
+        TextField textField5 = HelperMethods.makeTextField("Apps");
+        textField5.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
+        textField5.prefWidthProperty().bind(playersColumns.widthProperty().multiply(0.1));
+
+        TextField textField6 = HelperMethods.makeTextField("G");
+        textField6.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
+        textField6.prefWidthProperty().bind(playersColumns.widthProperty().multiply(0.05));
+
+        TextField textField7 = HelperMethods.makeTextField("A");
+        textField7.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
+        textField7.prefWidthProperty().bind(playersColumns.widthProperty().multiply(0.05));
+
+        Label deleteButton = Widgets.createDeleteButton("", connection, null);
+
+        imageView.setVisible(false);
+        deleteButton.setVisible(false);
+
+        playersColumns.getChildren().addAll(imageView, textField1, textField2, textField3, textField4, textField5, textField6, textField7, deleteButton);
+    }
+
+
     public void addCreateButton() {
         Label createButtonOwners = Widgets.createCreateButton("Add Owner", "owners", connection, selectedTeamIds);
         ownersButton.getChildren().add(createButtonOwners);
 
         Label createButtonCoaches = Widgets.createCreateButton("Add Coach", "coaches", connection, selectedTeamIds);
         coachesButton.getChildren().add(createButtonCoaches);
+
+        Label createButtonPlayers = Widgets.createCreateButton("Add Player", "players", connection, selectedTeamIds);
+        playersButton.getChildren().add(createButtonPlayers);
     }
 
 
     public void backButton(Event event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/slgr/Views/menu-view.fxml"));
-        Parent root = loader.load();
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Scene scene = stage.getScene();
-        scene.setRoot(root);
+        // If we are on the first page, go to the menu
+        if (firstPage.isVisible()) {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/slgr/Views/menu-view.fxml"));
+            Parent root = loader.load();
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            Scene scene = stage.getScene();
+            scene.setRoot(root);
+        }
+
+        // If we are on the second page, go to the first page
+        else {
+            teamsVBox.requestFocus();
+            forwardButton.setVisible(true);
+            forwardButton.setManaged(true);
+            secondPage.setVisible(false);
+            secondPage.setManaged(false);
+            firstPage.setVisible(true);
+            firstPage.setManaged(true);
+        }
+    }
+
+
+    // Go to the second page
+    public void forwardButton()  {
+        forwardButton.setVisible(false);
+        forwardButton.setManaged(false);
+        firstPage.setVisible(false);
+        firstPage.setManaged(false);
+        secondPage.setVisible(true);
+        secondPage.setManaged(true);
     }
 }

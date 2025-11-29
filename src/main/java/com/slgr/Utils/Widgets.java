@@ -124,11 +124,20 @@ public class Widgets {
 
                 // Only adds the new row to the VBox if the team's checkbox is checked
                 if (selectedTeamIds.contains(teamId)) {
-                    HBox row = createOwnersCoachesRow.get(logoLink, null, null, null, dataId, teamId, connection, table);
+                    HBox row;
+                    if (!table.equals("players")) {
+                        row = createOwnersCoachesRow.get(logoLink, null, null, null, dataId, teamId, connection, table);
+                    }
+
+                    else {
+                        row = createPlayersRow.get(logoLink, null, null, null, null, null, null, null, dataId, teamId, connection);
+                    }
+
                     VBox parentVBox = (VBox) buttonRow.getParent();
-                    VBox ownersCoachesVBox = (VBox) parentVBox.getChildren().get(1); // 1 = VBox with fx id: ownersVBox or VBox with fx id: coachesVBox
-                    HelperMethods.addRowSorted(ownersCoachesVBox, row, 1);
+                    VBox ownersCoachesPlayersVBox = (VBox) parentVBox.getChildren().get(1); // 1 = VBox with fx id: ownersVBox or VBox with fx id: coachesVBox or VBox with fx id: playersVBox
+                    HelperMethods.addRowSorted(ownersCoachesPlayersVBox, row, 1);
                 }
+
 
                 // Fixes layout
                 buttonRow.getChildren().remove(teamComboBox);

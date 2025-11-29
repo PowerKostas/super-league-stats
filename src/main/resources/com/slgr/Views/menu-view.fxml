@@ -37,16 +37,22 @@
                </font>
             </Text>
          </children>
-         <padding>
-            <Insets top="30.0" />
-         </padding>
       </StackPane>
-      <HBox alignment="CENTER" spacing="150.0" VBox.vgrow="ALWAYS">
+      <VBox VBox.vgrow="ALWAYS">
          <children>
-            <Button mnemonicParsing="false" onMouseClicked="#infoButton" styleClass="menu-button" text="Info" />
-             <Button mnemonicParsing="false" styleClass="menu-button" text="Log File" />
-             <Button mnemonicParsing="false" onMouseClicked="#exitButton" styleClass="exit-button" text="Exit" />
+            <HBox alignment="CENTER" spacing="150.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Button mnemonicParsing="false" onMouseClicked="#infoButton" styleClass="menu-button" text="Stats" />
+                   <Button mnemonicParsing="false" styleClass="menu-button" text="Log File" />
+               </children>
+            </HBox>
+            <HBox alignment="CENTER" spacing="150.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <Button mnemonicParsing="false" styleClass="menu-button" text="Info" />
+                  <Button mnemonicParsing="false" onMouseClicked="#exitButton" styleClass="exit-button" text="Exit" />
+               </children>
+            </HBox>
          </children>
-      </HBox>
+      </VBox>
     </children>
 </VBox>

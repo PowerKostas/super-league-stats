@@ -35,7 +35,6 @@ public class HelperMethods {
     public static TextField makeTextField(String text) {
         TextField textField = new TextField(text);
         textField.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-background-color: transparent;");
-        textField.setEditable(false);
         HBox.setHgrow(textField, Priority.ALWAYS);
 
         return textField;

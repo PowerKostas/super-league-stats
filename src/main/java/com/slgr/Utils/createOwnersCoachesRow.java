@@ -7,12 +7,15 @@ import javafx.scene.layout.HBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Priority;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class createOwnersCoachesRow {
-    public static HBox get(String tempLogoLink, String tempOwnerName, String tempNationality, Date tempDOB, int tempOwnerId, int teamId, Connection connection, String table) {
-        Image image = new Image(com.slgr.Utils.createTeamsRow.class.getResource("/com/slgr/Images/Logos/" + tempLogoLink).toString());
+    public static HBox get(String logoLink, String ownerName, String nationality, Date DOB, int ownerId, int teamId, Connection connection, String table) {
+        Image image = new Image(com.slgr.Utils.createTeamsRow.class.getResource("/com/slgr/Images/Logos/" + logoLink).toString());
         ImageView imageView = new ImageView();
         imageView.setImage(image);
         imageView.setFitHeight(35);
@@ -20,7 +23,7 @@ public class createOwnersCoachesRow {
         imageView.setPreserveRatio(true);
 
 
-        TextField textField1 = HelperMethods.makeTextField(tempOwnerName);
+        TextField textField1 = HelperMethods.makeTextField(ownerName);
 
         textField1.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {
             if (isNowFocused) {
@@ -35,7 +38,7 @@ public class createOwnersCoachesRow {
                     try {
                         String query = "CALL update_row_" + table + "(?, ?, ?, ?, ?)";
                         PreparedStatement statement = connection.prepareStatement(query);
-                        statement.setInt(1, tempOwnerId);
+                        statement.setInt(1, ownerId);
                         statement.setInt(2, teamId);
                         statement.setString(3, currentValue);
                         statement.setNull(4, Types.VARCHAR);
@@ -51,7 +54,7 @@ public class createOwnersCoachesRow {
         });
 
 
-        TextField textField2 = HelperMethods.makeTextField(tempNationality);
+        TextField textField2 = HelperMethods.makeTextField(nationality);
 
         textField2.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {
             if (isNowFocused) {
@@ -66,7 +69,7 @@ public class createOwnersCoachesRow {
                     try {
                         String query = "CALL update_row_" + table +"(?, ?, ?, ?, ?)";
                         PreparedStatement statement = connection.prepareStatement(query);
-                        statement.setInt(1, tempOwnerId);
+                        statement.setInt(1, ownerId);
                         statement.setInt(2, teamId);
                         statement.setNull(3, Types.VARCHAR);
                         statement.setString(4, currentValue);
@@ -84,8 +87,8 @@ public class createOwnersCoachesRow {
 
         TextField textField3 = new TextField();
 
-        if (tempDOB != null) {
-            textField3.setText(tempDOB.toString());
+        if (DOB != null) {
+            textField3.setText(DOB.toString());
         }
 
         else {
@@ -104,21 +107,37 @@ public class createOwnersCoachesRow {
                 String originalValue = (String) textField3.getUserData();
                 String currentValue = textField3.getText();
 
-                if (!originalValue.equals(currentValue)) {
-                    try {
-                        String query = "CALL update_row_" + table + "(?, ?, ?, ?, ?)";
-                        PreparedStatement statement = connection.prepareStatement(query);
-                        statement.setInt(1, tempOwnerId);
-                        statement.setInt(2, teamId);
-                        statement.setNull(3, Types.VARCHAR);
-                        statement.setNull(4, Types.VARCHAR);
-                        statement.setDate(5, java.sql.Date.valueOf(currentValue));
-                        statement.executeUpdate();
-                    }
+                // Check if the user actually inputted a date
+                boolean flag = true;
+                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                try {
+                    LocalDate.parse(currentValue, dateFormatter);
+                }
 
-                    catch (SQLException | IllegalArgumentException ex) {
+                catch (DateTimeParseException e) {
+                    flag = false;
+                }
 
+                if (flag) {
+                    if (!originalValue.equals(currentValue)) {
+                        try {
+                            String query = "CALL update_row_" + table + "(?, ?, ?, ?, ?)";
+                            PreparedStatement statement = connection.prepareStatement(query);
+                            statement.setInt(1, ownerId);
+                            statement.setInt(2, teamId);
+                            statement.setNull(3, Types.VARCHAR);
+                            statement.setNull(4, Types.VARCHAR);
+                            statement.setDate(5, java.sql.Date.valueOf(currentValue));
+                            statement.executeUpdate();
+                        } catch (SQLException | IllegalArgumentException ex) {
+
+                        }
                     }
+                }
+
+                // If invalid input, keep the original value
+                else {
+                    textField3.setText(originalValue);
                 }
             }
         });
@@ -132,7 +151,7 @@ public class createOwnersCoachesRow {
 
         // Every row keeps the owner id and team id beneath it
         ArrayList<Integer> keys = new ArrayList<>();
-        keys.add(tempOwnerId);
+        keys.add(ownerId);
         keys.add(teamId);
         row.setUserData(keys);
 

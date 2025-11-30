@@ -43,7 +43,7 @@ public class MenuController {
         }
     }
 
-    public void infoButton(Event event) {
+    public void statsButton(Event event) {
         loadingText.setText("Loading...");
 
         // Small pause before connecting to the database because it needs time drawing the loading text
@@ -53,13 +53,13 @@ public class MenuController {
 
            try {
                if (connection != null) { // Successful connection to the database
-                   FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/slgr/Views/info-view.fxml"));
+                   FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/slgr/Views/stats-view.fxml"));
                    Parent root = loader.load();
 
                    // Calls the starting functions, after the initialize function is done
-                   InfoController infoController = loader.getController();
-                   infoController.setConnection(connection);
-                   infoController.makeTeamsVBox();
+                   StatsController statsController = loader.getController();
+                   statsController.setConnection(connection);
+                   statsController.addRowsTeams();
 
                    Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                    Scene scene = stage.getScene();
@@ -81,6 +81,15 @@ public class MenuController {
         });
 
         pause.play();
+    }
+
+
+    public void infoButton(Event event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/slgr/Views/info-view.fxml"));
+        Parent root = loader.load();
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        Scene scene = stage.getScene();
+        scene.setRoot(root);
     }
 
 

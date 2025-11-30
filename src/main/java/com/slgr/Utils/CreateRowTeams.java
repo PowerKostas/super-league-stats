@@ -1,6 +1,6 @@
 package com.slgr.Utils;
 
-import com.slgr.Controllers.InfoController;
+import com.slgr.Controllers.StatsController;
 import javafx.geometry.Pos;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class CreateRowTeams {
-    public static HBox get(String tempLogoLink, String tempTeamName, int tempTeamId, ArrayList<Integer> selectedTeamIds, InfoController infoController) {
+    public static HBox get(String tempLogoLink, String tempTeamName, int tempTeamId, ArrayList<Integer> selectedTeamIds, StatsController statsController) {
         Image image = new Image(CreateRowTeams.class.getResource("/com/slgr/Images/Logos/" + tempLogoLink).toString());
         ImageView imageView = new ImageView();
         imageView.setImage(image);
@@ -39,7 +39,7 @@ public class CreateRowTeams {
         selectedTeamIds.add(tempTeamId);
 
         try {
-            infoController.addRows(tempTeamId);
+            statsController.addRows(tempTeamId);
         }
 
         catch (SQLException e) {
@@ -49,14 +49,14 @@ public class CreateRowTeams {
         // Every checkbox keeps the team id beneath it
         showSelectedCheckBox.setUserData(tempTeamId);
 
-        // Adds a click event to the checkbox to keep track of checked teams and modify corresponding rows in the info view
+        // Adds a click event to the checkbox to keep track of checked teams and modify corresponding rows in the stats view
         showSelectedCheckBox.setOnAction(e -> {
             int teamId = (int) showSelectedCheckBox.getUserData();
             if (showSelectedCheckBox.isSelected()) {
                 selectedTeamIds.add(teamId);
 
                 try {
-                    infoController.addRows(teamId);
+                    statsController.addRows(teamId);
                 }
 
                 catch (SQLException ex) {
@@ -66,7 +66,7 @@ public class CreateRowTeams {
 
             else {
                 selectedTeamIds.remove(Integer.valueOf(teamId));
-                infoController.removeRows(teamId);
+                statsController.removeRows(teamId);
             }
         });
 

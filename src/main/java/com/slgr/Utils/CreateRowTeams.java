@@ -11,9 +11,9 @@ import javafx.scene.layout.HBox;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class createTeamsRow {
+public class CreateRowTeams {
     public static HBox get(String tempLogoLink, String tempTeamName, int tempTeamId, ArrayList<Integer> selectedTeamIds, InfoController infoController) {
-        Image image = new Image(createTeamsRow.class.getResource("/com/slgr/Images/Logos/" + tempLogoLink).toString());
+        Image image = new Image(CreateRowTeams.class.getResource("/com/slgr/Images/Logos/" + tempLogoLink).toString());
         ImageView imageView = new ImageView();
         imageView.setImage(image);
         imageView.setFitHeight(75);

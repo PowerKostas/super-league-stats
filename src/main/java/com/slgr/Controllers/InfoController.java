@@ -14,9 +14,6 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
@@ -74,6 +71,9 @@ public class InfoController {
     @FXML
     private HBox playersButton;
 
+    @FXML
+    private HBox dynamicButtons1;
+
     private ArrayList<Integer> selectedTeamIds = new ArrayList<>();
 
     private Connection connection;
@@ -97,8 +97,7 @@ public class InfoController {
     }
 
 
-    // Makes the whole teams VBox
-    public void makeTeamsVBox() throws SQLException {
+    public void addRowsTeams() throws SQLException {
         // Executes queries to get data from the database
         String query = "SELECT * FROM get_team_logo_name_id()";
         Statement statement = connection.createStatement();
@@ -112,22 +111,20 @@ public class InfoController {
             int tempTeamId = teamLogoNameIdResults.getInt(3);
 
             // Puts the HBox row in the scrollable VBox
-            HBox row = createTeamsRow.get(tempLogoLink, tempTeamName, tempTeamId, selectedTeamIds, this);
+            HBox row = CreateRowTeams.get(tempLogoLink, tempTeamName, tempTeamId, selectedTeamIds, this);
             teamsVBox.getChildren().add(row);
         }
 
 
         // Continues the code now that a connection has been established
-        addCreateButton();
-        callAddColumnsOwnersCoaches();
-        addColumnsStandings();
-        addColumnsPlayers();
+        addColumns();
+        addCreateButtons();
     }
 
 
-    // Adds to the owners, coaches VBox the corresponding rows when the teams checkbox is checked
+    // Adds to the owners, coaches, standings, players VBox the corresponding rows when the teams checkbox is checked
     public void addRows(int teamId) throws SQLException {
-        // Repeats the process for the owners, coaches table
+        // Repeats the process from the teams VBox, for the other tables
         String query = "SELECT * FROM get_owners_logo(" + teamId + ")";
         Statement statement = connection.createStatement();
         ResultSet ownersTableResults = statement.executeQuery(query);
@@ -139,7 +136,7 @@ public class InfoController {
             Date tempDOB = ownersTableResults.getDate(5);
             int tempOwnerId = ownersTableResults.getInt(1);
 
-            HBox row = createOwnersCoachesRow.get(tempLogoLink, tempOwnerName, tempNationality, tempDOB, tempOwnerId, teamId, connection, "owners");
+            HBox row = CreateRowOwnersCoaches.get(tempLogoLink, tempOwnerName, tempNationality, tempDOB, tempOwnerId, teamId, connection, "owners");
             HelperMethods.addRowSorted(ownersVBox, row, 1);
         }
 
@@ -152,7 +149,7 @@ public class InfoController {
             Date tempDOB = coachesTableResults.getDate(5);
             int tempCoachId = coachesTableResults.getInt(1);
 
-            HBox row = createOwnersCoachesRow.get(tempLogoLink, tempCoachName, tempNationality, tempDOB, tempCoachId, teamId, connection, "coaches");
+            HBox row = CreateRowOwnersCoaches.get(tempLogoLink, tempCoachName, tempNationality, tempDOB, tempCoachId, teamId, connection, "coaches");
             HelperMethods.addRowSorted(coachesVBox, row, 1);
         }
 
@@ -165,27 +162,28 @@ public class InfoController {
             String tempLosses = standingsTableResults.getString(4);
             String tempPoints = standingsTableResults.getString(5);
 
-            HBox row = createStandingsRow.get(tempLogoLink, tempWins, tempDraws, tempLosses, tempPoints, teamId);
+            HBox row = CreateRowStandings.get(tempLogoLink, tempWins, tempDraws, tempLosses, tempPoints, teamId);
             HelperMethods.addRowSorted(standingsVBox, row, -1);
         }
 
 
         ResultSet playersTableResults = statement.executeQuery("SELECT * FROM get_players_logo(" + teamId + ")");
         while (playersTableResults.next()) {
-            String logoLink = playersTableResults.getString(10);
-            String playerName = playersTableResults.getString(3);
-            String playerPosition = playersTableResults.getString(4);
-            int age = playersTableResults.getInt(5);
-            String nationality = playersTableResults.getString(6);
-            int appearances = playersTableResults.getInt(7);
-            int goals = playersTableResults.getInt(8);
-            int assists = playersTableResults.getInt(9);
-            int playerId = playersTableResults.getInt(1);
+            String tempLogoLink = playersTableResults.getString(10);
+            String tempPlayerName = playersTableResults.getString(3);
+            String tempPlayerPosition = playersTableResults.getString(4);
+            int tempAge = playersTableResults.getInt(5);
+            String tempNationality = playersTableResults.getString(6);
+            int tempAppearances = playersTableResults.getInt(7);
+            int tempGoals = playersTableResults.getInt(8);
+            int tempAssists = playersTableResults.getInt(9);
+            int tempPlayerId = playersTableResults.getInt(1);
 
-            HBox row = createPlayersRow.get(logoLink, playerName, playerPosition, age, nationality, appearances, goals, assists, playerId, teamId, connection);
+            HBox row = CreateRowPlayers.get(tempLogoLink, tempPlayerName, tempPlayerPosition, tempAge, tempNationality, tempAppearances, tempGoals, tempAssists, tempPlayerId, teamId, connection);
             HelperMethods.addRowSorted(playersVBox, row, 1);
         }
     }
+
 
     //  Removes from the owners, coaches VBox the corresponding rows when the teams checkbox is unchecked
     public void removeRows(int teamId) {
@@ -211,109 +209,16 @@ public class InfoController {
     }
 
 
-    // Hacky way (it copies the structure of the actual HBox row) to add headers to the owners, coaches VBox
-    public void addColumnsOwnersCoaches(HBox targetColumns) {
-        Image image = new Image(com.slgr.Utils.createTeamsRow.class.getResource("/com/slgr/Images/Logos/" + "1.png").toString());
-        ImageView imageView = new ImageView();
-        imageView.setImage(image);
-        imageView.setFitHeight(35);
-        imageView.setFitWidth(35);
-        imageView.setPreserveRatio(true);
-
-        TextField textField1 = HelperMethods.makeTextField("Name");
-        textField1.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
-        textField1.setEditable(false);
-        TextField textField2 = HelperMethods.makeTextField("Nationality");
-        textField2.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
-        textField2.setEditable(false);
-        TextField textField3 = HelperMethods.makeTextField("DOB");
-        textField3.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
-        textField3.setEditable(false);
-
-        Label deleteButton = Widgets.createDeleteButton("", connection, null);
-
-        imageView.setVisible(false);
-        deleteButton.setVisible(false);
-
-        targetColumns.getChildren().addAll(imageView, textField1, textField2, textField3, deleteButton);
-    }
-
-    public void callAddColumnsOwnersCoaches() {
-        addColumnsOwnersCoaches(ownersColumns);
-        addColumnsOwnersCoaches(coachesColumns);
+    // Hacky way (it copies the structure of the actual HBox row) to add headers to the tables
+    public void addColumns() {
+        CreateColumnsOwnersCoaches.get(ownersColumns, connection);
+        CreateColumnsOwnersCoaches.get(coachesColumns, connection);
+        CreateColumnsStandings.get(standingsColumns, connection);
+        CreateColumnsPlayers.get(playersColumns, connection);
     }
 
 
-    // Repeats the process for the standings, players tables
-    public void addColumnsStandings() {
-        Image image = new Image(com.slgr.Utils.createTeamsRow.class.getResource("/com/slgr/Images/Logos/" + "1.png").toString());
-        ImageView imageView = new ImageView();
-        imageView.setImage(image);
-        imageView.setFitHeight(45);
-        imageView.setFitWidth(45);
-        imageView.setPreserveRatio(true);
-
-        TextField textField1 = HelperMethods.makeTextField("Wins");
-        textField1.setStyle("-fx-font-family: Rockwell; -fx-font-size: 24px; -fx-font-weight: bold; -fx-background-color: transparent;");
-        TextField textField2 = HelperMethods.makeTextField("Draws");
-        textField2.setStyle("-fx-font-family: Rockwell; -fx-font-size: 24px; -fx-font-weight: bold; -fx-background-color: transparent;");
-        TextField textField3 = HelperMethods.makeTextField("Losses");
-        textField3.setStyle("-fx-font-family: Rockwell; -fx-font-size: 24px; -fx-font-weight: bold; -fx-background-color: transparent;");
-        TextField textField4 = HelperMethods.makeTextField("Points");
-        textField4.setStyle("-fx-font-family: Rockwell; -fx-font-size: 24px; -fx-font-weight: bold; -fx-background-color: transparent;");
-
-        imageView.setVisible(false);
-        standingsColumns.setSpacing(100);
-        standingsColumns.getChildren().addAll(imageView, textField1, textField2, textField3, textField4);
-    }
-
-
-    public void addColumnsPlayers() {
-        Image image = new Image(com.slgr.Utils.createTeamsRow.class.getResource("/com/slgr/Images/Logos/" + "1.png").toString());
-        ImageView imageView = new ImageView();
-        imageView.setImage(image);
-        imageView.setFitHeight(35);
-        imageView.setFitWidth(35);
-        imageView.setPreserveRatio(true);
-
-        TextField textField1 = HelperMethods.makeTextField("Name");
-        textField1.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
-        textField1.prefWidthProperty().bind(playersColumns.widthProperty().multiply(0.275));
-
-        TextField textField2 = HelperMethods.makeTextField("Position");
-        textField2.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
-        textField2.prefWidthProperty().bind(playersColumns.widthProperty().multiply(0.2));
-
-        TextField textField3 = HelperMethods.makeTextField("Age");
-        textField3.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
-        textField3.prefWidthProperty().bind(playersColumns.widthProperty().multiply(0.075));
-
-        TextField textField4 = HelperMethods.makeTextField("Nationality");
-        textField4.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
-        textField4.prefWidthProperty().bind(playersColumns.widthProperty().multiply(0.2));
-
-        TextField textField5 = HelperMethods.makeTextField("Apps");
-        textField5.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
-        textField5.prefWidthProperty().bind(playersColumns.widthProperty().multiply(0.1));
-
-        TextField textField6 = HelperMethods.makeTextField("G");
-        textField6.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
-        textField6.prefWidthProperty().bind(playersColumns.widthProperty().multiply(0.05));
-
-        TextField textField7 = HelperMethods.makeTextField("A");
-        textField7.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-font-weight: bold; -fx-background-color: transparent;");
-        textField7.prefWidthProperty().bind(playersColumns.widthProperty().multiply(0.05));
-
-        Label deleteButton = Widgets.createDeleteButton("", connection, null);
-
-        imageView.setVisible(false);
-        deleteButton.setVisible(false);
-
-        playersColumns.getChildren().addAll(imageView, textField1, textField2, textField3, textField4, textField5, textField6, textField7, deleteButton);
-    }
-
-
-    public void addCreateButton() {
+    public void addCreateButtons() {
         Label createButtonOwners = Widgets.createCreateButton("Add Owner", "owners", connection, selectedTeamIds);
         ownersButton.getChildren().add(createButtonOwners);
 

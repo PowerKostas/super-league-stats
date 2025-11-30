@@ -13,9 +13,9 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class createOwnersCoachesRow {
+public class CreateRowOwnersCoaches {
     public static HBox get(String logoLink, String ownerName, String nationality, Date DOB, int ownerId, int teamId, Connection connection, String table) {
-        Image image = new Image(com.slgr.Utils.createTeamsRow.class.getResource("/com/slgr/Images/Logos/" + logoLink).toString());
+        Image image = new Image(CreateRowTeams.class.getResource("/com/slgr/Images/Logos/" + logoLink).toString());
         ImageView imageView = new ImageView();
         imageView.setImage(image);
         imageView.setFitHeight(35);
@@ -25,6 +25,8 @@ public class createOwnersCoachesRow {
 
         TextField textField1 = HelperMethods.makeTextField(ownerName);
 
+        // Adds a listener to the text field, when the text field loses focus it updates that specific column of the
+        // database, if there was a change
         textField1.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {
             if (isNowFocused) {
                 textField1.setUserData(textField1.getText());
@@ -54,6 +56,7 @@ public class createOwnersCoachesRow {
         });
 
 
+        // Repeats the process for the other text fields
         TextField textField2 = HelperMethods.makeTextField(nationality);
 
         textField2.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {

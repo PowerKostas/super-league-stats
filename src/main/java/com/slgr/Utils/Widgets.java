@@ -126,11 +126,11 @@ public class Widgets {
                 if (selectedTeamIds.contains(teamId)) {
                     HBox row;
                     if (!table.equals("players")) {
-                        row = createOwnersCoachesRow.get(logoLink, null, null, null, dataId, teamId, connection, table);
+                        row = CreateRowOwnersCoaches.get(logoLink, null, null, null, dataId, teamId, connection, table);
                     }
 
                     else {
-                        row = createPlayersRow.get(logoLink, null, null, null, null, null, null, null, dataId, teamId, connection);
+                        row = CreateRowPlayers.get(logoLink, null, null, null, null, null, null, null, dataId, teamId, connection);
                     }
 
                     VBox parentVBox = (VBox) buttonRow.getParent();

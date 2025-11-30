@@ -12,12 +12,12 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class createPlayersRow {
-    public static HBox get(String tempLogoLink, String playerName, String playerPosition, Integer age, String nationality, Integer appearances, Integer goals, Integer assists, int playerId, int teamId, Connection connection) {
+public class CreateRowPlayers {
+    public static HBox get(String logoLink, String playerName, String playerPosition, Integer age, String nationality, Integer appearances, Integer goals, Integer assists, int playerId, int teamId, Connection connection) {
         HBox row = new HBox();
 
 
-        Image image = new Image(com.slgr.Utils.createTeamsRow.class.getResource("/com/slgr/Images/Logos/" + tempLogoLink).toString());
+        Image image = new Image(CreateRowTeams.class.getResource("/com/slgr/Images/Logos/" + logoLink).toString());
         ImageView imageView = new ImageView();
         imageView.setImage(image);
         imageView.setFitHeight(35);
@@ -28,6 +28,8 @@ public class createPlayersRow {
         TextField textField1 = HelperMethods.makeTextField(playerName);
         textField1.prefWidthProperty().bind(row.widthProperty().multiply(0.275)); // Percentage of the HBox row every text field takes
 
+        // Adds a listener to the text field, when the text field loses focus it updates that specific column of the
+        // database, if there was a change
         textField1.focusedProperty().addListener((observable, wasFocused, isNowFocused) -> {
             if (isNowFocused) {
                 textField1.setUserData(textField1.getText());
@@ -61,6 +63,7 @@ public class createPlayersRow {
         });
 
 
+        // Repeats the process for the other text fields
         TextField textField2 = HelperMethods.makeTextField(playerPosition);
         textField2.prefWidthProperty().bind(row.widthProperty().multiply(0.2));
 

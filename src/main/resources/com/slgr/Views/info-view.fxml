@@ -9,181 +9,189 @@
 <?import javafx.scene.text.Text?>
 
 <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.slgr.Controllers.InfoController">
-   <children>
-      <StackPane>
-         <children>
-            <Text fx:id="backButton" fill="DODGERBLUE" onMouseClicked="#backButton" stroke="BLACK" strokeType="OUTSIDE" text="◀">
-               <font>
-                  <Font size="96.0" />
-               </font>
-            </Text>
-         </children>
-         <padding>
-            <Insets right="10.0" />
-         </padding>
-      </StackPane>
-      <ScrollPane fitToHeight="true" fitToWidth="true" pannable="true" prefWidth="400.0">
-         <content>
-            <VBox fx:id="teamsVBox" spacing="10.0" style="-fx-background-color: white;">
-               <padding>
-                  <Insets left="5.0" top="5.0" />
-               </padding></VBox>
-         </content>
-         <HBox.margin>
-            <Insets bottom="10.0" top="10.0" />
-         </HBox.margin>
-      </ScrollPane>
-      <VBox fx:id="firstPage" spacing="10.0" HBox.hgrow="ALWAYS">
-         <children>
-            <VBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-               <children>
-                  <StackPane>
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Owners">
-                           <font>
-                              <Font name="Rockwell Bold" size="30.0" />
-                           </font>
-                        </Text>
-                     </children>
-                  </StackPane>
-                  <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
-                     <content>
-                        <VBox style="-fx-background-color: white;">
-                           <children>
-                              <HBox fx:id="ownersColumns">
-                                 <padding>
-                                    <Insets left="5.0" />
-                                 </padding></HBox>
-                              <VBox fx:id="ownersVBox">
-                                 <padding>
-                                    <Insets left="5.0" />
-                                 </padding>
-                              </VBox>
-                              <HBox fx:id="ownersButton" alignment="CENTER" />
-                           </children>
+    <children>
+        <StackPane>
+            <children>
+                <Text fx:id="backButton" fill="DODGERBLUE" onMouseClicked="#backButton" stroke="BLACK" strokeType="OUTSIDE" text="◀">
+                    <font>
+                        <Font size="96.0" />
+                    </font>
+                </Text>
+            </children>
+            <padding>
+                <Insets right="10.0" />
+            </padding>
+        </StackPane>
+        <ScrollPane fitToHeight="true" fitToWidth="true" pannable="true" prefWidth="400.0">
+            <content>
+                <VBox fx:id="teamsVBox" spacing="10.0" style="-fx-background-color: white;">
+                    <padding>
+                        <Insets left="5.0" top="5.0" />
+                    </padding></VBox>
+            </content>
+            <HBox.margin>
+                <Insets bottom="10.0" top="10.0" />
+            </HBox.margin>
+        </ScrollPane>
+        <VBox fx:id="firstPage" spacing="10.0" HBox.hgrow="ALWAYS">
+            <children>
+                <VBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                    <children>
+                        <StackPane>
+                            <children>
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Owners">
+                                    <font>
+                                        <Font name="Rockwell Bold" size="30.0" />
+                                    </font>
+                                </Text>
+                            </children>
+                        </StackPane>
+                        <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
+                            <content>
+                                <VBox style="-fx-background-color: white;">
+                                    <children>
+                                        <HBox fx:id="ownersColumns">
+                                            <padding>
+                                                <Insets left="5.0" />
+                                            </padding></HBox>
+                                        <VBox fx:id="ownersVBox">
+                                            <padding>
+                                                <Insets left="5.0" />
+                                            </padding>
+                                        </VBox>
+                                        <HBox fx:id="ownersButton" alignment="CENTER" />
+                                    </children>
+                                </VBox>
+                            </content>
+                        </ScrollPane>
+                    </children>
+                </VBox>
+                <VBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                    <children>
+                        <StackPane>
+                            <children>
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Coaches">
+                                    <font>
+                                        <Font name="Rockwell Bold" size="30.0" />
+                                    </font>
+                                </Text>
+                            </children>
+                        </StackPane>
+                        <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
+                            <content>
+                                <VBox style="-fx-background-color: white;">
+                                    <children>
+                                        <HBox fx:id="coachesColumns">
+                                            <padding>
+                                                <Insets left="5.0" />
+                                            </padding></HBox>
+                                        <VBox fx:id="coachesVBox">
+                                            <padding>
+                                                <Insets left="5.0" />
+                                            </padding>
+                                        </VBox>
+                                        <HBox fx:id="coachesButton" alignment="CENTER" />
+                                    </children>
+                                </VBox>
+                            </content>
+                        </ScrollPane>
+                    </children>
+                </VBox>
+                <VBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                    <children>
+                        <StackPane>
+                            <children>
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Standings">
+                                    <font>
+                                        <Font name="Rockwell Bold" size="30.0" />
+                                    </font>
+                                </Text>
+                            </children>
+                        </StackPane>
+                        <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
+                            <content>
+                                <VBox style="-fx-background-color: white;">
+                                    <padding>
+                                        <Insets left="5.0" />
+                                    </padding>
+                                    <children>
+                                        <HBox fx:id="standingsColumns" prefHeight="100.0" prefWidth="200.0">
+                                            <padding>
+                                                <Insets left="5.0" />
+                                            </padding>
+                                        </HBox>
+                                        <VBox fx:id="standingsVBox" prefHeight="200.0" prefWidth="100.0">
+                                            <padding>
+                                                <Insets left="5.0" />
+                                            </padding>
+                                        </VBox>
+                                    </children></VBox>
+                            </content>
+                        </ScrollPane>
+                    </children>
+                </VBox>
+            </children>
+            <HBox.margin>
+                <Insets bottom="10.0" left="10.0" />
+            </HBox.margin></VBox>
+        <VBox fx:id="secondPage" spacing="10.0" HBox.hgrow="ALWAYS">
+            <children>
+                <VBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                    <children>
+                        <StackPane>
+                            <children>
+                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Players">
+                                    <font>
+                                        <Font name="Rockwell Bold" size="30.0" />
+                                    </font>
+                                </Text>
+                            </children>
+                        </StackPane>
+                          <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
+                              <content>
+                                  <VBox style="-fx-background-color: white;">
+                                      <children>
+                                      <HBox fx:id="playersColumns">
+                                          <padding>
+                                              <Insets left="5.0" />
+                                          </padding>
+                                      </HBox>
+                                          <VBox fx:id="playersVBox">
+                                              <padding>
+                                                  <Insets left="5.0" />
+                                              </padding>
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                                          </VBox>
+                                          <HBox fx:id="playersButton" alignment="CENTER" />
+                                      </children>
+                                  </VBox>
+                              </content>
+                          </ScrollPane>
+                        <VBox>
+                            <children>
+                                <HBox fx:id="dynamicButtons1" VBox.vgrow="ALWAYS" />
+                            </children>
                         </VBox>
-                     </content>
-                  </ScrollPane>
-               </children>
-            </VBox>
-            <VBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-               <children>
-                  <StackPane>
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Coaches">
-                           <font>
-                              <Font name="Rockwell Bold" size="30.0" />
-                           </font>
-                        </Text>
-                     </children>
-                  </StackPane>
-                  <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
-                    <content>
-                        <VBox style="-fx-background-color: white;">
-                           <children>
-                              <HBox fx:id="coachesColumns">
-                                 <padding>
-                                    <Insets left="5.0" />
-                                 </padding></HBox>
-                              <VBox fx:id="coachesVBox">
-                                 <padding>
-                                    <Insets left="5.0" />
-                                 </padding>
-                              </VBox>
-                              <HBox fx:id="coachesButton" alignment="CENTER" />
-                           </children>
-                        </VBox>
-                    </content>
-                  </ScrollPane>
-               </children>
-            </VBox>
-            <VBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-               <children>
-                  <StackPane>
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Standings">
-                           <font>
-                              <Font name="Rockwell Bold" size="30.0" />
-                           </font>
-                        </Text>
-                     </children>
-                  </StackPane>
-                  <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
-                     <content>
-                        <VBox style="-fx-background-color: white;">
-                           <padding>
-                              <Insets left="5.0" />
-                           </padding>
-                           <children>
-                              <HBox fx:id="standingsColumns" prefHeight="100.0" prefWidth="200.0">
-                                 <padding>
-                                    <Insets left="5.0" />
-                                 </padding>
-                              </HBox>
-                              <VBox fx:id="standingsVBox" prefHeight="200.0" prefWidth="100.0">
-                                 <padding>
-                                    <Insets left="5.0" />
-                                 </padding>
-                              </VBox>
-                           </children></VBox>
-                     </content>
-                  </ScrollPane>
-               </children>
-            </VBox>
-         </children>
-         <HBox.margin>
-            <Insets bottom="10.0" left="10.0" />
-         </HBox.margin></VBox>
-      <VBox fx:id="secondPage" spacing="10.0" HBox.hgrow="ALWAYS">
-         <children>
-            <VBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-               <children>
-                  <StackPane>
-                     <children>
-                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Players">
-                           <font>
-                              <Font name="Rockwell Bold" size="30.0" />
-                           </font>
-                        </Text>
-                     </children>
-                  </StackPane>
-                  <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
-                     <content>
-                        <VBox style="-fx-background-color: white;">
-                           <children>
-                              <HBox fx:id="playersColumns">
-                                 <padding>
-                                    <Insets left="5.0" />
-                                 </padding>
-                              </HBox>
-                              <VBox fx:id="playersVBox">
-                                 <padding>
-                                    <Insets left="5.0" />
-                                 </padding>
-                              </VBox>
-                              <HBox fx:id="playersButton" alignment="CENTER" />
-                           </children>
-                        </VBox>
-                     </content>
-                  </ScrollPane>
-               </children>
-            </VBox>
-         </children>
-         <HBox.margin>
-            <Insets bottom="10.0" left="10.0" />
-         </HBox.margin>
-      </VBox>
-      <StackPane>
-         <padding>
-            <Insets left="10.0" />
-         </padding>
-         <children>
-            <Text fx:id="forwardButton" fill="DODGERBLUE" onMouseClicked="#forwardButton" stroke="BLACK" strokeType="OUTSIDE" text="▶">
-               <font>
-                  <Font size="96.0" />
-               </font>
-            </Text>
-         </children>
-      </StackPane>
-   </children>
+                    </children>
+                </VBox>
+            </children>
+            <HBox.margin>
+                <Insets bottom="10.0" left="10.0" />
+            </HBox.margin>
+        </VBox>
+        <StackPane>
+            <padding>
+                <Insets left="10.0" />
+            </padding>
+            <children>
+                <Text fx:id="forwardButton" fill="DODGERBLUE" onMouseClicked="#forwardButton" stroke="BLACK" strokeType="OUTSIDE" text="▶">
+                    <font>
+                        <Font size="96.0" />
+                    </font>
+                </Text>
+            </children>
+        </StackPane>
+    </children>
 </HBox>

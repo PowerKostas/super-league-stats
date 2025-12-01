@@ -171,7 +171,7 @@
                         </ScrollPane>
                         <VBox>
                             <children>
-                                <HBox fx:id="dynamicButtons1" VBox.vgrow="ALWAYS" />
+                                <HBox fx:id="dynamicQueries1" VBox.vgrow="ALWAYS" />
                             </children>
                         </VBox>
                     </children>

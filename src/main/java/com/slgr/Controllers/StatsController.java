@@ -72,7 +72,10 @@ public class StatsController {
     private HBox playersButton;
 
     @FXML
-    private HBox dynamicButtons1;
+    private Label createButtonPlayers;
+
+    @FXML
+    private HBox dynamicQueries1;
 
     private ArrayList<Integer> selectedTeamIds = new ArrayList<>();
 
@@ -119,6 +122,7 @@ public class StatsController {
         // Continues the code now that a connection has been established
         addColumns();
         addCreateButtons();
+        addDynamicQueries();
     }
 
 
@@ -168,20 +172,7 @@ public class StatsController {
 
 
         ResultSet playersTableResults = statement.executeQuery("SELECT * FROM get_players_logo(" + teamId + ")");
-        while (playersTableResults.next()) {
-            String tempLogoLink = playersTableResults.getString(10);
-            String tempPlayerName = playersTableResults.getString(3);
-            String tempPlayerPosition = playersTableResults.getString(4);
-            int tempAge = playersTableResults.getInt(5);
-            String tempNationality = playersTableResults.getString(6);
-            int tempAppearances = playersTableResults.getInt(7);
-            int tempGoals = playersTableResults.getInt(8);
-            int tempAssists = playersTableResults.getInt(9);
-            int tempPlayerId = playersTableResults.getInt(1);
-
-            HBox row = CreateRowPlayers.get(tempLogoLink, tempPlayerName, tempPlayerPosition, tempAge, tempNationality, tempAppearances, tempGoals, tempAssists, tempPlayerId, teamId, connection);
-            HelperMethods.addRowSorted(playersVBox, row, 1);
-        }
+        HelperMethods.addRowPlayers(playersTableResults, playersVBox, connection);
     }
 
 
@@ -225,8 +216,13 @@ public class StatsController {
         Label createButtonCoaches = Widgets.createCreateButton("Add Coach", "coaches", connection, selectedTeamIds);
         coachesButton.getChildren().add(createButtonCoaches);
 
-        Label createButtonPlayers = Widgets.createCreateButton("Add Player", "players", connection, selectedTeamIds);
+        createButtonPlayers = Widgets.createCreateButton("Add Player", "players", connection, selectedTeamIds);
         playersButton.getChildren().add(createButtonPlayers);
+    }
+
+
+    public void addDynamicQueries() {
+        Widgets.addDynamicQueries(dynamicQueries1, playersVBox, connection, createButtonPlayers);
     }
 
 

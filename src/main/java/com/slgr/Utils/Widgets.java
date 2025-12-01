@@ -1,10 +1,9 @@
 package com.slgr.Utils;
 
 import javafx.scene.Cursor;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Tooltip;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import java.sql.*;
 import java.util.ArrayList;
@@ -147,5 +146,40 @@ public class Widgets {
         });
 
         return createButton;
+    }
+
+
+    public static void addDynamicQueries(HBox dynamicQueriesHBox, VBox playersVBox, Connection connection, Label createButtonPlayers) {
+        TextField nameTextField = new TextField();
+        nameTextField.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px;");
+        nameTextField.setPromptText("Search By Player Name");
+        HBox.setHgrow(nameTextField, Priority.ALWAYS);
+
+        nameTextField.setOnAction(e -> {
+            // The user can only create new players when no search filters are applied
+            if (nameTextField.getText() != "") {
+                createButtonPlayers.setVisible(false);
+            }
+
+            else {
+                createButtonPlayers.setVisible(true);
+            }
+
+            // Clears the table and adds the found rows
+            playersVBox.getChildren().clear();
+            try {
+                String query = "SELECT * FROM name_search(?)";
+                PreparedStatement statement = connection.prepareStatement(query);
+                statement.setString(1, nameTextField.getText().trim());
+                ResultSet playersTableResults = statement.executeQuery();
+                HelperMethods.addRowPlayers(playersTableResults, playersVBox, connection);
+            }
+
+            catch (SQLException ex) {
+
+            }
+        });
+
+        dynamicQueriesHBox.getChildren().addAll(nameTextField);
     }
 }

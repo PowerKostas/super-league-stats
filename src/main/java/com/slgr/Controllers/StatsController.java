@@ -77,6 +77,12 @@ public class StatsController {
     @FXML
     private HBox dynamicQueries1;
 
+    @FXML
+    private HBox dynamicQueries2;
+
+    @FXML
+    private HBox dynamicQueries3;
+
     private ArrayList<Integer> selectedTeamIds = new ArrayList<>();
 
     private Connection connection;
@@ -222,7 +228,7 @@ public class StatsController {
 
 
     public void addDynamicQueries() {
-        Widgets.addDynamicQueries(dynamicQueries1, playersVBox, connection, createButtonPlayers);
+        Widgets.addDynamicQueries(dynamicQueries1, dynamicQueries2, dynamicQueries3, playersVBox, connection, createButtonPlayers);
     }
 
 

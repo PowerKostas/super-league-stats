@@ -4,6 +4,7 @@ import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import java.sql.*;
 import java.util.ArrayList;
@@ -56,6 +57,7 @@ public class Widgets {
         // to these chosen teams
         createButton.setOnMouseClicked(e -> {
             ComboBox<Label> teamComboBox = new ComboBox<>();
+            teamComboBox.setStyle("-fx-font-family: Rockwell; -fx-font-size: 16px; -fx-base: white");
             teamComboBox.setPromptText("Choose Team");
 
             // Fixes layout
@@ -149,37 +151,173 @@ public class Widgets {
     }
 
 
-    public static void addDynamicQueries(HBox dynamicQueriesHBox, VBox playersVBox, Connection connection, Label createButtonPlayers) {
+    public static void addDynamicQueries(HBox dynamicQueries1, HBox dynamicQueries2, HBox dynamicQueries3, VBox playersVBox, Connection connection, Label createButtonPlayers) {
         TextField nameTextField = new TextField();
+        nameTextField.setPromptText("Enter name...");
         nameTextField.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px;");
-        nameTextField.setPromptText("Search By Player Name");
+        nameTextField.setPrefWidth(0);
+        nameTextField.setMaxWidth(Double.MAX_VALUE);
         HBox.setHgrow(nameTextField, Priority.ALWAYS);
 
-        nameTextField.setOnAction(e -> {
-            // The user can only create new players when no search filters are applied
-            if (nameTextField.getText() != "") {
+        ComboBox<String> positionComboBox = new ComboBox<>();
+        positionComboBox.setValue("All Positions");
+        positionComboBox.getItems().addAll("All Positions", "Goalkeeper", "Centre-Back", "Left-Back", "Right-Back",
+                                           "Defensive Midfield", "Central Midfield", "Right Midfield", "Left Midfield",
+                                           "Attacking Midfield", "Left Winger", "Right Winger", "Second Striker",
+                                           "Centre-Forward");
+        positionComboBox.setStyle("-fx-font-family: Rockwell; -fx-font-size: 16px; -fx-base: white");
+        positionComboBox.setPrefWidth(0);
+        positionComboBox.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(positionComboBox, Priority.ALWAYS);
+        positionComboBox.setMaxHeight(Double.MAX_VALUE);
+        positionComboBox.setCursor(Cursor.HAND);
+
+        TextField nationalityTextField = new TextField();
+        nationalityTextField.setPromptText("Enter nationality...");
+        nationalityTextField.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px;");
+        nationalityTextField.setPrefWidth(0);
+        nationalityTextField.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(nationalityTextField, Priority.ALWAYS);
+
+        dynamicQueries1.getChildren().addAll(nameTextField, positionComboBox, nationalityTextField);
+
+
+        Label ageFromLabel = new Label("Age from");
+        ageFromLabel.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px;");
+        ageFromLabel.setMinWidth(Region.USE_PREF_SIZE);
+        TextField ageFromTextField = new TextField();
+        ageFromTextField.setText("0");
+        ageFromTextField.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px;");
+
+        Label ageToLabel = new Label("Age to");
+        ageToLabel.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px;");
+        ageToLabel.setMinWidth(Region.USE_PREF_SIZE);
+        TextField ageToTextField = new TextField();
+        ageToTextField.setText("100");
+        ageToTextField.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px;");
+
+        Label apperancesFromLabel = new Label("Appearances from");
+        apperancesFromLabel.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px;");
+        apperancesFromLabel.setMinWidth(Region.USE_PREF_SIZE);
+        TextField appearancesFromTextField = new TextField();
+        appearancesFromTextField.setText("0");
+        appearancesFromTextField.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px;");
+
+        Label appearancesToLabel = new Label("Age To");
+        appearancesToLabel.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px;");
+        appearancesToLabel.setMinWidth(Region.USE_PREF_SIZE);
+        TextField appearancesToTextField = new TextField();
+        appearancesToTextField.setText("100");
+        appearancesToTextField.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px;");
+
+        dynamicQueries2.getChildren().addAll(ageFromLabel, ageFromTextField, ageToLabel, ageToTextField, apperancesFromLabel, appearancesFromTextField, appearancesToLabel, appearancesToTextField);
+
+
+        Label goalsFromLabel = new Label("Goals from");
+        goalsFromLabel.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px;");
+        goalsFromLabel.setMinWidth(Region.USE_PREF_SIZE);
+        TextField goalsFromTextField = new TextField();
+        goalsFromTextField.setText("0");
+        goalsFromTextField.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px;");
+
+        Label goalsToLabel = new Label("Goals to");
+        goalsToLabel.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px;");
+        goalsToLabel.setMinWidth(Region.USE_PREF_SIZE);
+        TextField goalsToTextField = new TextField();
+        goalsToTextField.setText("100");
+        goalsToTextField.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px;");
+
+        Label assistsFromLabel = new Label("Assists from");
+        assistsFromLabel.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px;");
+        assistsFromLabel.setMinWidth(Region.USE_PREF_SIZE);
+        TextField assistsFromTextField = new TextField();
+        assistsFromTextField.setText("0");
+        assistsFromTextField.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px;");
+
+        Label assistsToLabel = new Label("Assists To");
+        assistsToLabel.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px;");
+        assistsToLabel.setMinWidth(Region.USE_PREF_SIZE);
+        TextField assistsToTextField = new TextField();
+        assistsToTextField.setText("100");
+        assistsToTextField.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px;");
+
+        Button searchButton = new Button("Search");
+        searchButton.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-base: lightgreen");
+        searchButton.setMinWidth(Region.USE_PREF_SIZE);
+        searchButton.setCursor(Cursor.HAND);
+
+        Button clearButton = new Button("Clear");
+        clearButton.setStyle("-fx-font-family: Rockwell; -fx-font-size: 20px; -fx-base: tomato");
+        clearButton.setMinWidth(Region.USE_PREF_SIZE);
+        clearButton.setCursor(Cursor.HAND);
+
+        dynamicQueries3.getChildren().addAll(goalsFromLabel, goalsFromTextField, goalsToLabel, goalsToTextField, assistsFromLabel, assistsFromTextField, assistsToLabel, assistsToTextField, searchButton, clearButton);
+
+
+        searchButton.setOnMouseClicked(e -> {
+            if (!nameTextField.getText().isEmpty() || !positionComboBox.getValue().equals("All Positions") ||
+                !nationalityTextField.getText().isEmpty() || !ageFromTextField.getText().equals("0") ||
+                !ageToTextField.getText().equals("100") || !appearancesFromTextField.getText().equals("0") ||
+                !appearancesToTextField.getText().equals("100") || !goalsFromTextField.getText().equals("0") ||
+                !goalsToTextField.getText().equals("100") || !assistsFromTextField.getText().equals("0") ||
+                !assistsToTextField.getText().equals("100")) {
+
                 createButtonPlayers.setVisible(false);
+                createButtonPlayers.setManaged(false);
             }
 
             else {
                 createButtonPlayers.setVisible(true);
+                createButtonPlayers.setManaged(true);
             }
 
-            // Clears the table and adds the found rows
             playersVBox.getChildren().clear();
             try {
-                String query = "SELECT * FROM name_search(?)";
+                String query = "SELECT * FROM search_filters(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 PreparedStatement statement = connection.prepareStatement(query);
+
                 statement.setString(1, nameTextField.getText().trim());
+
+                if (positionComboBox.getValue().equals("All Positions")) {
+                    statement.setString(2, "");
+                }
+
+                else {
+                    statement.setString(2, positionComboBox.getValue());
+                }
+
+                statement.setInt(3, Integer.parseInt(ageFromTextField.getText()));
+                statement.setInt(4, Integer.parseInt(ageToTextField.getText()));
+                statement.setString(5, nationalityTextField.getText().trim());
+                statement.setInt(6, Integer.parseInt(appearancesFromTextField.getText()));
+                statement.setInt(7, Integer.parseInt(appearancesToTextField.getText()));
+                statement.setInt(8, Integer.parseInt(goalsFromTextField.getText()));
+                statement.setInt(9, Integer.parseInt(goalsToTextField.getText()));
+                statement.setInt(10, Integer.parseInt(assistsFromTextField.getText()));
+                statement.setInt(11, Integer.parseInt(assistsToTextField.getText()));
+
                 ResultSet playersTableResults = statement.executeQuery();
                 HelperMethods.addRowPlayers(playersTableResults, playersVBox, connection);
             }
 
             catch (SQLException ex) {
-
+                ex.printStackTrace();
             }
         });
 
-        dynamicQueriesHBox.getChildren().addAll(nameTextField);
+
+        clearButton.setOnMouseClicked(e -> {
+            nameTextField.setText("");
+            positionComboBox.setValue("All Positions");
+            nationalityTextField.setText("");
+            ageFromTextField.setText("0");
+            ageToTextField.setText("100");
+            appearancesFromTextField.setText("0");
+            appearancesToTextField.setText("100");
+            goalsFromTextField.setText("0");
+            goalsToTextField.setText("100");
+            assistsFromTextField.setText("0");
+            assistsToTextField.setText("100");
+        });
     }
 }

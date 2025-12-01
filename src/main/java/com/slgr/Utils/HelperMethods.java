@@ -5,6 +5,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class HelperMethods {
@@ -38,5 +41,30 @@ public class HelperMethods {
         HBox.setHgrow(textField, Priority.ALWAYS);
 
         return textField;
+    }
+
+
+    public static void addRowPlayers(ResultSet playersTableResults, VBox playersVBox, Connection connection) {
+        try {
+            while (playersTableResults.next()) {
+                String tempLogoLink = playersTableResults.getString(10);
+                String tempPlayerName = playersTableResults.getString(3);
+                String tempPlayerPosition = playersTableResults.getString(4);
+                int tempAge = playersTableResults.getInt(5);
+                String tempNationality = playersTableResults.getString(6);
+                int tempAppearances = playersTableResults.getInt(7);
+                int tempGoals = playersTableResults.getInt(8);
+                int tempAssists = playersTableResults.getInt(9);
+                int tempPlayerId = playersTableResults.getInt(1);
+                int tempTeamId = playersTableResults.getInt(2);
+
+                HBox row = CreateRowPlayers.get(tempLogoLink, tempPlayerName, tempPlayerPosition, tempAge, tempNationality, tempAppearances, tempGoals, tempAssists, tempPlayerId, tempTeamId, connection);
+                HelperMethods.addRowSorted(playersVBox, row, 1);
+            }
+        }
+
+        catch (SQLException e) {
+
+        }
     }
 }

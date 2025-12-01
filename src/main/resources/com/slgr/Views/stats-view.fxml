@@ -169,10 +169,15 @@
                                 </VBox>
                             </content>
                         </ScrollPane>
-                        <VBox>
+                        <VBox spacing="10.0">
                             <children>
-                                <HBox fx:id="dynamicButtons1" VBox.vgrow="ALWAYS" />
+                                <HBox fx:id="dynamicQueries1" spacing="20.0" VBox.vgrow="ALWAYS" />
+                        <HBox fx:id="dynamicQueries2" alignment="CENTER_LEFT" spacing="20.0" />
+                        <HBox fx:id="dynamicQueries3" alignment="CENTER_LEFT" spacing="20.0" />
                             </children>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
                         </VBox>
                     </children>
                 </VBox>

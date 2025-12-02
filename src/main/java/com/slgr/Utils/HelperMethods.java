@@ -59,7 +59,7 @@ public class HelperMethods {
                 int tempTeamId = playersTableResults.getInt(2);
 
                 HBox row = CreateRowPlayers.get(tempLogoLink, tempPlayerName, tempPlayerPosition, tempAge, tempNationality, tempAppearances, tempGoals, tempAssists, tempPlayerId, tempTeamId, connection);
-                HelperMethods.addRowSorted(playersVBox, row, 1);
+                addRowSorted(playersVBox, row, 1);
             }
         }
 

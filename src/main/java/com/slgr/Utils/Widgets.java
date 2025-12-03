@@ -132,7 +132,7 @@ public class Widgets {
                     }
 
                     else {
-                        row = CreateRowPlayers.get(logoLink, null, null, null, null, null, null, null, dataId, teamId, connection);
+                        row = CreateRowPlayers.get(logoLink, "", "", 0, "", 0, 0, 0, dataId, teamId, connection);
                     }
 
                     VBox parentVBox = (VBox) buttonRow.getParent();
@@ -152,7 +152,7 @@ public class Widgets {
     }
 
 
-    public static void addDynamicQueries(HBox dynamicQueries1, HBox dynamicQueries2, HBox dynamicQueries3, VBox playersVBox, Connection connection, Label createButtonPlayers, ArrayList<Integer> selectedOrders) {
+    public static void addDynamicQueries(HBox dynamicQueries1, HBox dynamicQueries2, HBox dynamicQueries3, VBox playersVBox, Connection connection, Label createButtonPlayers, ArrayList<Object> selectedFilters) {
         // First row
         TextField nameTextField = new TextField();
         nameTextField.setPromptText("Enter name...");
@@ -172,7 +172,7 @@ public class Widgets {
         String[] positions = {
                 "Goalkeeper", "Centre-Back", "Left-Back", "Right-Back", "Defensive Midfield", "Central Midfield",
                 "Right Midfield", "Left Midfield",  "Attacking Midfield", "Left Winger", "Right Winger",
-                "Second Striker", "Centre-Forward"
+                "Second Striker", "Centre-Forward", "Other"
         };
 
         for (String pos : positions) {
@@ -304,19 +304,37 @@ public class Widgets {
 
 
         searchButton.setOnMouseClicked(e -> {
+            // Keeps track of all dynamic queries values, every time the search button is clicked
+            try {
+                selectedFilters.set(0, nameTextField.getText().trim());
+                selectedFilters.set(2, Integer.parseInt(ageFromTextField.getText()));
+                selectedFilters.set(3, Integer.parseInt(ageToTextField.getText()));
+                selectedFilters.set(4, nationalityTextField.getText().trim());
+                selectedFilters.set(5, Integer.parseInt(appsFromTextField.getText()));
+                selectedFilters.set(6, Integer.parseInt(appsToTextField.getText()));
+                selectedFilters.set(7, Integer.parseInt(goalsFromTextField.getText()));
+                selectedFilters.set(8, Integer.parseInt(goalsToTextField.getText()));
+                selectedFilters.set(9, Integer.parseInt(assistsFromTextField.getText()));
+                selectedFilters.set(10, Integer.parseInt(assistsToTextField.getText()));
+            }
+
+            catch (NumberFormatException ex) {
+
+            }
+
             // Gets the selected order choice (+ 1, to match the player row user data)
-            selectedOrders.set(0, orderChoiceComboBox.getSelectionModel().getSelectedIndex() + 1);
+            selectedFilters.set(11, orderChoiceComboBox.getSelectionModel().getSelectedIndex() + 1);
 
             // Gets the selected order type and turns in to 1 for ascending order and -1 for descending order
             if (orderTypeComboBox.getSelectionModel().getSelectedIndex() == 0) {
-                selectedOrders.set(1, 1);
+                selectedFilters.set(12, 1);
             }
 
             else {
-                selectedOrders.set(1, -1);
+                selectedFilters.set(12, -1);
             }
 
-            // Counts the number of checked position checkboxes (default is 13) and puts the text of the checked ones
+            // Counts the number of checked position checkboxes (default is 14) and puts the text of the checked ones
             // in an array
             int selectedCount = 0;
             List<String> tempSelectedPositions1 = new ArrayList<>();
@@ -330,9 +348,11 @@ public class Widgets {
                 }
             }
 
+            selectedFilters.set(1, tempSelectedPositions1);
+
             // Checks if any widget's value is different from the default one, if yes, it hides the create button, so
             // the user can't create new players if filters are applied
-            if (!nameTextField.getText().isEmpty() || !(selectedCount == 13) ||
+            if (!nameTextField.getText().isEmpty() || !(selectedCount == 14) ||
                     !nationalityTextField.getText().isEmpty() || !ageFromTextField.getText().equals("0") ||
                     !ageToTextField.getText().equals("100") || !appsFromTextField.getText().equals("0") ||
                     !appsToTextField.getText().equals("100") || !goalsFromTextField.getText().equals("0") ||
@@ -352,7 +372,7 @@ public class Widgets {
             // Clears the VBox, puts the widgets' values in a function, renews the VBox with the returned filtered players
             playersVBox.getChildren().clear();
             try {
-                String query = "SELECT * FROM search_filters(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                String query = "SELECT * FROM search_filters_all(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 PreparedStatement statement = connection.prepareStatement(query);
 
                 statement.setString(1, nameTextField.getText().trim());
@@ -398,7 +418,7 @@ public class Widgets {
                 }
             }
 
-            catch (SQLException ex) {
+            catch (SQLException | NumberFormatException ex) {
 
             }
         });

@@ -1,10 +1,7 @@
 package com.slgr.Controllers;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -21,6 +18,7 @@ import javafx.stage.Stage;
 import com.slgr.Utils.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class StatsController {
     @FXML
@@ -85,7 +83,7 @@ public class StatsController {
 
     private ArrayList<Integer> selectedTeamIds = new ArrayList<>();
 
-    private ArrayList<Integer> selectedOrders = new ArrayList<>();
+    private ArrayList<Object> selectedFilters = new ArrayList<>();
 
     private Connection connection;
     public void setConnection(Connection connection) {
@@ -106,11 +104,24 @@ public class StatsController {
         backButton.setCursor(Cursor.HAND);
         forwardButton.setCursor(Cursor.HAND);
 
-        // First value of selectedOrders is the orderChoice and second value is the orderType
-        // orderChoice: 1 = Team (Default), 2 = Age, 3 = Appearances, 4 = Goals, 5 = Assists
-        // orderType: 1 = Ascending order (Default), -1 = Descending order
-        selectedOrders.add(1);
-        selectedOrders.add(1);
+        // Initializes the array that keeps track of all dynamic queries values
+        selectedFilters.add("");
+        selectedFilters.add(new ArrayList<>(List.of(
+                "Goalkeeper", "Centre-Back", "Left-Back", "Right-Back", "Defensive Midfield",
+                "Central Midfield", "Right Midfield", "Left Midfield", "Attacking Midfield",
+                "Left Winger", "Right Winger", "Second Striker", "Centre-Forward", "Other"
+        )));
+        selectedFilters.add(0);
+        selectedFilters.add(100);
+        selectedFilters.add("");
+        selectedFilters.add(0);
+        selectedFilters.add(100);
+        selectedFilters.add(0);
+        selectedFilters.add(100);
+        selectedFilters.add(0);
+        selectedFilters.add(100);
+        selectedFilters.add(1); // 1 = Team order, 2 = Age order, 3 = Apps order, 4 = Goals order, 5 = Assists order
+        selectedFilters.add(1); // 1 = Ascending order, 2 = Descending order
     }
 
 
@@ -121,7 +132,7 @@ public class StatsController {
         ResultSet teamLogoNameIdResults = statement.executeQuery(query);
 
 
-        // Extracts data row by row and sets up logos, team names, checkboxes and CRUD buttons on the left side of the page
+        // Extracts data row by row and sets up logos, team names and checkboxes on the left side of the page
         while (teamLogoNameIdResults.next()) {
             String tempLogoLink = teamLogoNameIdResults.getString(1);
             String tempTeamName = teamLogoNameIdResults.getString(2);
@@ -185,7 +196,32 @@ public class StatsController {
         }
 
 
-        ResultSet playersTableResults = statement.executeQuery("SELECT * FROM get_players_logo(" + teamId + ")");
+        // Gets the dynamic queries values and extracts player data based on those
+        query = "SELECT * FROM search_filters_team(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        PreparedStatement statement2 = connection.prepareStatement(query);
+
+        statement2.setString(1, (String) selectedFilters.get(0));
+
+        List<String> tempSelectedPositions1 = (List<String>) selectedFilters.get(1);
+        String[] tempSelectedPositions2 = tempSelectedPositions1.toArray(new String[0]);
+        java.sql.Array selectedPositions = connection.createArrayOf("varchar", tempSelectedPositions2);
+        statement2.setArray(2, selectedPositions);
+
+        statement2.setInt(3, (int) selectedFilters.get(2));
+        statement2.setInt(4, (int) selectedFilters.get(3));
+        statement2.setString(5, (String) selectedFilters.get(4));
+        statement2.setInt(6, (int) selectedFilters.get(5));
+        statement2.setInt(7, (int) selectedFilters.get(6));
+        statement2.setInt(8, (int) selectedFilters.get(7));
+        statement2.setInt(9, (int) selectedFilters.get(8));
+        statement2.setInt(10, (int) selectedFilters.get(9));
+        statement2.setInt(11, (int) selectedFilters.get(10));
+        statement2.setInt(12, (int) selectedFilters.get(11));
+        statement2.setInt(13, (int) selectedFilters.get(12));
+        statement2.setInt(14, teamId);
+
+        ResultSet playersTableResults = statement2.executeQuery();
+
         while (playersTableResults.next()) {
             String tempLogoLink = playersTableResults.getString(10);
             String tempPlayerName = playersTableResults.getString(3);
@@ -199,7 +235,7 @@ public class StatsController {
             int tempTeamId = playersTableResults.getInt(2);
 
             HBox row = CreateRowPlayers.get(tempLogoLink, tempPlayerName, tempPlayerPosition, tempAge, tempNationality, tempAppearances, tempGoals, tempAssists, tempPlayerId, tempTeamId, connection);
-            HelperMethods.addRowSorted(playersVBox, row, selectedOrders.get(0), selectedOrders.get(1));
+            HelperMethods.addRowSorted(playersVBox, row, (int) selectedFilters.get(11), (int) selectedFilters.get(12)); // 12 = Order choice, 13 = Order type
         }
     }
 
@@ -250,7 +286,7 @@ public class StatsController {
 
 
     public void addDynamicQueries() {
-        Widgets.addDynamicQueries(dynamicQueries1, dynamicQueries2, dynamicQueries3, playersVBox, connection, createButtonPlayers, selectedOrders);
+        Widgets.addDynamicQueries(dynamicQueries1, dynamicQueries2, dynamicQueries3, playersVBox, connection, createButtonPlayers, selectedFilters);
     }
 
 

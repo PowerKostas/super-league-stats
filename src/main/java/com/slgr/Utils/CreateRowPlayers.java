@@ -37,8 +37,8 @@ public class CreateRowPlayers {
 
             else {
                 String originalValue = ((String) textField1.getUserData());
-                String currentValue = textField1.getText();
-                textField1.setText(currentValue.trim());
+                String currentValue = textField1.getText().trim();
+                textField1.setText(currentValue);
 
                 if (!java.util.Objects.equals(originalValue, currentValue)) {
                     try {
@@ -46,7 +46,7 @@ public class CreateRowPlayers {
                         PreparedStatement statement = connection.prepareStatement(query);
                         statement.setInt(1, playerId);
                         statement.setInt(2, teamId);
-                        statement.setString(3, currentValue.trim());
+                        statement.setString(3, currentValue);
                         statement.setNull(4, Types.VARCHAR);
                         statement.setNull(5, Types.INTEGER);
                         statement.setNull(6, Types.VARCHAR);
@@ -79,8 +79,8 @@ public class CreateRowPlayers {
 
             else {
                 String originalValue = ((String) textField2.getUserData());
-                String currentValue = textField2.getText();
-                textField2.setText(currentValue.trim());
+                String currentValue = textField2.getText().trim();
+                textField2.setText(currentValue);
 
                 if (!java.util.Objects.equals(originalValue, currentValue)) {
                     try {
@@ -89,7 +89,7 @@ public class CreateRowPlayers {
                         statement.setInt(1, playerId);
                         statement.setInt(2, teamId);
                         statement.setNull(3, Types.VARCHAR);
-                        statement.setString(4, currentValue.trim());
+                        statement.setString(4, currentValue);
                         statement.setNull(5, Types.INTEGER);
                         statement.setNull(6, Types.VARCHAR);
                         statement.setNull(7, Types.INTEGER);
@@ -169,8 +169,8 @@ public class CreateRowPlayers {
 
             else {
                 String originalValue = ((String) textField4.getUserData());
-                String currentValue = textField4.getText();
-                textField4.setText(currentValue.trim());
+                String currentValue = textField4.getText().trim();
+                textField4.setText(currentValue);
 
                 if (!java.util.Objects.equals(originalValue, currentValue)) {
                     try {
@@ -181,7 +181,7 @@ public class CreateRowPlayers {
                         statement.setNull(3, Types.VARCHAR);
                         statement.setNull(4, Types.VARCHAR);
                         statement.setNull(5, Types.INTEGER);
-                        statement.setString(6, currentValue.trim());
+                        statement.setString(6, currentValue);
                         statement.setNull(7, Types.INTEGER);
                         statement.setNull(8, Types.INTEGER);
                         statement.setNull(9, Types.INTEGER);

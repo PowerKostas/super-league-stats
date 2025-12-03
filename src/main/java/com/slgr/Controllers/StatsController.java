@@ -85,6 +85,8 @@ public class StatsController {
 
     private ArrayList<Integer> selectedTeamIds = new ArrayList<>();
 
+    private ArrayList<Integer> selectedOrders = new ArrayList<>();
+
     private Connection connection;
     public void setConnection(Connection connection) {
         this.connection = connection;
@@ -103,6 +105,12 @@ public class StatsController {
 
         backButton.setCursor(Cursor.HAND);
         forwardButton.setCursor(Cursor.HAND);
+
+        // First value of selectedOrders is the orderChoice and second value is the orderType
+        // orderChoice: 1 = Team (Default), 2 = Age, 3 = Appearances, 4 = Goals, 5 = Assists
+        // orderType: 1 = Ascending order (Default), -1 = Descending order
+        selectedOrders.add(1);
+        selectedOrders.add(1);
     }
 
 
@@ -147,7 +155,7 @@ public class StatsController {
             int tempOwnerId = ownersTableResults.getInt(1);
 
             HBox row = CreateRowOwnersCoaches.get(tempLogoLink, tempOwnerName, tempNationality, tempDOB, tempOwnerId, teamId, connection, "owners");
-            HelperMethods.addRowSorted(ownersVBox, row, 1);
+            HelperMethods.addRowSorted(ownersVBox, row, 1, 1);
         }
 
 
@@ -160,7 +168,7 @@ public class StatsController {
             int tempCoachId = coachesTableResults.getInt(1);
 
             HBox row = CreateRowOwnersCoaches.get(tempLogoLink, tempCoachName, tempNationality, tempDOB, tempCoachId, teamId, connection, "coaches");
-            HelperMethods.addRowSorted(coachesVBox, row, 1);
+            HelperMethods.addRowSorted(coachesVBox, row, 1, 1);
         }
 
 
@@ -173,12 +181,26 @@ public class StatsController {
             String tempPoints = standingsTableResults.getString(5);
 
             HBox row = CreateRowStandings.get(tempLogoLink, tempWins, tempDraws, tempLosses, tempPoints, teamId);
-            HelperMethods.addRowSorted(standingsVBox, row, -1);
+            HelperMethods.addRowSorted(standingsVBox, row, 1, -1);
         }
 
 
         ResultSet playersTableResults = statement.executeQuery("SELECT * FROM get_players_logo(" + teamId + ")");
-        HelperMethods.addRowPlayers(playersTableResults, playersVBox, connection);
+        while (playersTableResults.next()) {
+            String tempLogoLink = playersTableResults.getString(10);
+            String tempPlayerName = playersTableResults.getString(3);
+            String tempPlayerPosition = playersTableResults.getString(4);
+            int tempAge = playersTableResults.getInt(5);
+            String tempNationality = playersTableResults.getString(6);
+            int tempAppearances = playersTableResults.getInt(7);
+            int tempGoals = playersTableResults.getInt(8);
+            int tempAssists = playersTableResults.getInt(9);
+            int tempPlayerId = playersTableResults.getInt(1);
+            int tempTeamId = playersTableResults.getInt(2);
+
+            HBox row = CreateRowPlayers.get(tempLogoLink, tempPlayerName, tempPlayerPosition, tempAge, tempNationality, tempAppearances, tempGoals, tempAssists, tempPlayerId, tempTeamId, connection);
+            HelperMethods.addRowSorted(playersVBox, row, selectedOrders.get(0), selectedOrders.get(1));
+        }
     }
 
 
@@ -228,7 +250,7 @@ public class StatsController {
 
 
     public void addDynamicQueries() {
-        Widgets.addDynamicQueries(dynamicQueries1, dynamicQueries2, dynamicQueries3, playersVBox, connection, createButtonPlayers);
+        Widgets.addDynamicQueries(dynamicQueries1, dynamicQueries2, dynamicQueries3, playersVBox, connection, createButtonPlayers, selectedOrders);
     }
 
 

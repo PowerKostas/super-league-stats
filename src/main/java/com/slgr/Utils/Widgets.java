@@ -1,7 +1,5 @@
 package com.slgr.Utils;
 
-import javafx.geometry.NodeOrientation;
-import javafx.geometry.Side;
 import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
@@ -139,7 +137,7 @@ public class Widgets {
 
                     VBox parentVBox = (VBox) buttonRow.getParent();
                     VBox ownersCoachesPlayersVBox = (VBox) parentVBox.getChildren().get(1); // 1 = VBox with fx id: ownersVBox or VBox with fx id: coachesVBox or VBox with fx id: playersVBox
-                    HelperMethods.addRowSorted(ownersCoachesPlayersVBox, row, 1);
+                    HelperMethods.addRowSorted(ownersCoachesPlayersVBox, row, 1, 1);
                 }
 
 
@@ -154,7 +152,8 @@ public class Widgets {
     }
 
 
-    public static void addDynamicQueries(HBox dynamicQueries1, HBox dynamicQueries2, HBox dynamicQueries3, VBox playersVBox, Connection connection, Label createButtonPlayers) {
+    public static void addDynamicQueries(HBox dynamicQueries1, HBox dynamicQueries2, HBox dynamicQueries3, VBox playersVBox, Connection connection, Label createButtonPlayers, ArrayList<Integer> selectedOrders) {
+        // First row
         TextField nameTextField = new TextField();
         nameTextField.setPromptText("Enter name...");
         nameTextField.setStyle("-fx-font-family: Rockwell; -fx-font-size: 16px;");
@@ -197,6 +196,7 @@ public class Widgets {
         dynamicQueries1.getChildren().addAll(nameTextField, positionMenuButton, nationalityTextField);
 
 
+        // Second row
         Label ageFromLabel = new Label("Age from");
         ageFromLabel.setStyle("-fx-font-family: Rockwell; -fx-font-size: 16px;");
         ageFromLabel.setMinWidth(Region.USE_PREF_SIZE);
@@ -248,6 +248,7 @@ public class Widgets {
         dynamicQueries2.getChildren().addAll(ageFromLabel, ageFromTextField, ageToLabel, ageToTextField, appsFromLabel, appsFromTextField, appsToLabel, appsToTextField, goalsFromLabel, goalsFromTextField, goalsToLabel, goalsToTextField);
 
 
+        // Third row
         Label assistsFromLabel = new Label("Assists from");
         assistsFromLabel.setStyle("-fx-font-family: Rockwell; -fx-font-size: 16px;");
 
@@ -269,7 +270,7 @@ public class Widgets {
 
         ComboBox<String> orderChoiceComboBox = new ComboBox<>();
         orderChoiceComboBox.setValue("Team");
-        orderChoiceComboBox.getItems().addAll("Team", "Position", "Age", "Appearances", "Goals", "Assists");
+        orderChoiceComboBox.getItems().addAll("Team", "Age", "Appearances", "Goals", "Assists");
         orderChoiceComboBox.setStyle("-fx-font-family: Rockwell; -fx-font-size: 16px; -fx-base: white");
         orderChoiceComboBox.setPrefWidth(0);
         orderChoiceComboBox.setMaxWidth(Double.MAX_VALUE);
@@ -277,7 +278,7 @@ public class Widgets {
         orderChoiceComboBox.setCursor(Cursor.HAND);
 
         ComboBox<String> orderTypeComboBox = new ComboBox<>();
-        orderTypeComboBox.setValue("Descending");
+        orderTypeComboBox.setValue("Ascending");
         orderTypeComboBox.getItems().addAll("Ascending", "Descending");
         orderTypeComboBox.setStyle("-fx-font-family: Rockwell; -fx-font-size: 16px; -fx-base: white");
         orderTypeComboBox.setPrefWidth(0);
@@ -303,9 +304,22 @@ public class Widgets {
 
 
         searchButton.setOnMouseClicked(e -> {
+            // Gets the selected order choice (+ 1, to match the player row user data)
+            selectedOrders.set(0, orderChoiceComboBox.getSelectionModel().getSelectedIndex() + 1);
+
+            // Gets the selected order type and turns in to 1 for ascending order and -1 for descending order
+            if (orderTypeComboBox.getSelectionModel().getSelectedIndex() == 0) {
+                selectedOrders.set(1, 1);
+            }
+
+            else {
+                selectedOrders.set(1, -1);
+            }
+
+            // Counts the number of checked position checkboxes (default is 13) and puts the text of the checked ones
+            // in an array
             int selectedCount = 0;
             List<String> tempSelectedPositions1 = new ArrayList<>();
-
             for (MenuItem tempMenuItem : positionMenuButton.getItems()) {
                 CustomMenuItem menuItem = (CustomMenuItem) tempMenuItem;
                 CheckBox checkBox = (CheckBox) menuItem.getContent();
@@ -316,13 +330,15 @@ public class Widgets {
                 }
             }
 
+            // Checks if any widget's value is different from the default one, if yes, it hides the create button, so
+            // the user can't create new players if filters are applied
             if (!nameTextField.getText().isEmpty() || !(selectedCount == 13) ||
-                !nationalityTextField.getText().isEmpty() || !ageFromTextField.getText().equals("0") ||
-                !ageToTextField.getText().equals("100") || !appsFromTextField.getText().equals("0") ||
-                !appsToTextField.getText().equals("100") || !goalsFromTextField.getText().equals("0") ||
-                !goalsToTextField.getText().equals("100") || !assistsFromTextField.getText().equals("0") ||
-                !assistsToTextField.getText().equals("100") || !orderChoiceComboBox.getValue().equals("Team") ||
-                !orderTypeComboBox.getValue().equals("Descending")) {
+                    !nationalityTextField.getText().isEmpty() || !ageFromTextField.getText().equals("0") ||
+                    !ageToTextField.getText().equals("100") || !appsFromTextField.getText().equals("0") ||
+                    !appsToTextField.getText().equals("100") || !goalsFromTextField.getText().equals("0") ||
+                    !goalsToTextField.getText().equals("100") || !assistsFromTextField.getText().equals("0") ||
+                    !assistsToTextField.getText().equals("100") || !orderChoiceComboBox.getValue().equals("Team") ||
+                    !orderTypeComboBox.getValue().equals("Ascending")) {
 
                 createButtonPlayers.setVisible(false);
                 createButtonPlayers.setManaged(false);
@@ -333,6 +349,7 @@ public class Widgets {
                 createButtonPlayers.setManaged(true);
             }
 
+            // Clears the VBox, puts the widgets' values in a function, renews the VBox with the returned filtered players
             playersVBox.getChildren().clear();
             try {
                 String query = "SELECT * FROM search_filters(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -353,19 +370,41 @@ public class Widgets {
                 statement.setInt(9, Integer.parseInt(goalsToTextField.getText()));
                 statement.setInt(10, Integer.parseInt(assistsFromTextField.getText()));
                 statement.setInt(11, Integer.parseInt(assistsToTextField.getText()));
-                statement.setInt(12, orderChoiceComboBox.getSelectionModel().getSelectedIndex());
-                statement.setInt(13, orderTypeComboBox.getSelectionModel().getSelectedIndex());
+                statement.setInt(12, orderChoiceComboBox.getSelectionModel().getSelectedIndex() + 1);
+
+                if (orderTypeComboBox.getSelectionModel().getSelectedIndex() == 0) {
+                    statement.setInt(13, 0);
+                }
+
+                else {
+                    statement.setInt(13, 1);
+                }
 
                 ResultSet playersTableResults = statement.executeQuery();
-                HelperMethods.addRowPlayers(playersTableResults, playersVBox, connection);
+                while (playersTableResults.next()) {
+                    String tempLogoLink = playersTableResults.getString(10);
+                    String tempPlayerName = playersTableResults.getString(3);
+                    String tempPlayerPosition = playersTableResults.getString(4);
+                    int tempAge = playersTableResults.getInt(5);
+                    String tempNationality = playersTableResults.getString(6);
+                    int tempAppearances = playersTableResults.getInt(7);
+                    int tempGoals = playersTableResults.getInt(8);
+                    int tempAssists = playersTableResults.getInt(9);
+                    int tempPlayerId = playersTableResults.getInt(1);
+                    int tempTeamId = playersTableResults.getInt(2);
+
+                    HBox row = CreateRowPlayers.get(tempLogoLink, tempPlayerName, tempPlayerPosition, tempAge, tempNationality, tempAppearances, tempGoals, tempAssists, tempPlayerId, tempTeamId, connection);
+                    playersVBox.getChildren().add(row);
+                }
             }
 
             catch (SQLException ex) {
-                ex.printStackTrace();
+
             }
         });
 
 
+        // Puts the default value for every widget
         clearButton.setOnMouseClicked(e -> {
             nameTextField.setText("");
 
@@ -385,7 +424,7 @@ public class Widgets {
             assistsFromTextField.setText("0");
             assistsToTextField.setText("100");
             orderChoiceComboBox.setValue("Team");
-            orderTypeComboBox.setValue("Descending");
+            orderTypeComboBox.setValue("Ascending");
         });
     }
 }

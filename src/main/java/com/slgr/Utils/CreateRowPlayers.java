@@ -36,8 +36,9 @@ public class CreateRowPlayers {
             }
 
             else {
-                String originalValue = (String) textField1.getUserData();
+                String originalValue = ((String) textField1.getUserData());
                 String currentValue = textField1.getText();
+                textField1.setText(currentValue.trim());
 
                 if (!java.util.Objects.equals(originalValue, currentValue)) {
                     try {
@@ -45,7 +46,7 @@ public class CreateRowPlayers {
                         PreparedStatement statement = connection.prepareStatement(query);
                         statement.setInt(1, playerId);
                         statement.setInt(2, teamId);
-                        statement.setString(3, currentValue);
+                        statement.setString(3, currentValue.trim());
                         statement.setNull(4, Types.VARCHAR);
                         statement.setNull(5, Types.INTEGER);
                         statement.setNull(6, Types.VARCHAR);
@@ -58,6 +59,10 @@ public class CreateRowPlayers {
                     catch (SQLException ex) {
 
                     }
+                }
+
+                else {
+
                 }
             }
         });
@@ -73,8 +78,9 @@ public class CreateRowPlayers {
             }
 
             else {
-                String originalValue = (String) textField2.getUserData();
+                String originalValue = ((String) textField2.getUserData());
                 String currentValue = textField2.getText();
+                textField2.setText(currentValue.trim());
 
                 if (!java.util.Objects.equals(originalValue, currentValue)) {
                     try {
@@ -83,7 +89,7 @@ public class CreateRowPlayers {
                         statement.setInt(1, playerId);
                         statement.setInt(2, teamId);
                         statement.setNull(3, Types.VARCHAR);
-                        statement.setString(4, currentValue);
+                        statement.setString(4, currentValue.trim());
                         statement.setNull(5, Types.INTEGER);
                         statement.setNull(6, Types.VARCHAR);
                         statement.setNull(7, Types.INTEGER);
@@ -162,8 +168,9 @@ public class CreateRowPlayers {
             }
 
             else {
-                String originalValue = (String) textField4.getUserData();
+                String originalValue = ((String) textField4.getUserData());
                 String currentValue = textField4.getText();
+                textField4.setText(currentValue.trim());
 
                 if (!java.util.Objects.equals(originalValue, currentValue)) {
                     try {
@@ -174,7 +181,7 @@ public class CreateRowPlayers {
                         statement.setNull(3, Types.VARCHAR);
                         statement.setNull(4, Types.VARCHAR);
                         statement.setNull(5, Types.INTEGER);
-                        statement.setString(6, currentValue);
+                        statement.setString(6, currentValue.trim());
                         statement.setNull(7, Types.INTEGER);
                         statement.setNull(8, Types.INTEGER);
                         statement.setNull(9, Types.INTEGER);
@@ -339,10 +346,14 @@ public class CreateRowPlayers {
         Label deleteButton = Widgets.createDeleteButton("Delete Player", connection, "players");
 
 
-        // Every row keeps the player id and team id beneath it
+        // Every row keeps the player id and the sortable columns data beneath it
         ArrayList<Integer> keys = new ArrayList<>();
         keys.add(playerId);
         keys.add(teamId);
+        keys.add(age);
+        keys.add(appearances);
+        keys.add(goals);
+        keys.add(assists);
         row.setUserData(keys);
 
         // Puts the widgets in the HBox

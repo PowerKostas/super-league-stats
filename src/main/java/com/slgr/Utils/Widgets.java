@@ -29,7 +29,7 @@ public class Widgets {
             parentVBox.getChildren().remove(row);
 
             ArrayList<Integer> keys = (ArrayList<Integer>) row.getUserData();
-            String query = "CALL delete_row_" + table + "(" + keys.get(0) + "," + keys.get(1) + ")"; // keys.get(0) = owner id of the row, keys.get(1) = team id of the row
+            String query = "CALL delete_row_" + table + "(" + keys.get(0) + "," + keys.get(1) + ")"; // keys.get(0) = data id of the row, keys.get(1) = team id of the row
             try {
                 PreparedStatement statement = connection.prepareStatement(query);
                 statement.executeUpdate();
@@ -128,7 +128,7 @@ public class Widgets {
                 if (selectedTeamIds.contains(teamId)) {
                     HBox row;
                     if (!table.equals("players")) {
-                        row = CreateRowOwnersCoaches.get(logoLink, null, null, null, dataId, teamId, connection, table);
+                        row = CreateRowOwnersCoaches.get(logoLink, "", "", null, dataId, teamId, connection, table);
                     }
 
                     else {

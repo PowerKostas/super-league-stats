@@ -110,6 +110,11 @@ public class CreateRowOwnersCoaches {
                 String originalValue = (String) textField3.getUserData();
                 String currentValue = textField3.getText();
 
+                if (currentValue != null) {
+                    currentValue = currentValue.trim();
+                    textField3.setText(currentValue);
+                }
+
                 // Check if the user actually inputted a date
                 boolean flag = true;
                 DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

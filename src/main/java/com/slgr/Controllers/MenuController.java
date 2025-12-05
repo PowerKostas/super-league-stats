@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import io.github.cdimascio.dotenv.Dotenv;
 
@@ -94,6 +95,19 @@ public class MenuController {
 
 
     public void exitButton() {
+        // Resets the logging table, every time the user closes the app
+        Connection connection = connectToDatabase();
+
+        String query = "CALL reset_logging()";
+        try {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.executeUpdate();
+        }
+
+        catch (SQLException ex) {
+
+        }
+
         Platform.exit();
     }
 }

@@ -1,0 +1,53 @@
+.table-view {
+    -fx-background-color: transparent;
+    -fx-table-cell-border-color: transparent;
+    -fx-padding: 0 2 -2 0;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: white;
+}
+
+.table-view .filler {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header .label {
+    -fx-font-family: "Rockwell";
+    -fx-font-size: 28px;
+    -fx-text-fill: white;
+    -fx-alignment: CENTER;
+}
+
+.table-row-cell {
+    -fx-background-color: transparent;
+}
+
+.table-cell {
+    -fx-font-family: "Rockwell";
+    -fx-font-size: 20px;
+    -fx-text-fill: white;
+    -fx-border-color: transparent white white white;
+}
+
+.table-view:focused .table-row-cell:selected, 
+.table-row-cell:selected {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-text-fill: white;
+}
+
+.table-view .placeholder .label {
+    -fx-font-family: "Rockwell";
+    -fx-font-size: 28px;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.table-row-cell:filled:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+}

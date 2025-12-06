@@ -54,9 +54,7 @@ public class MenuController {
         // Small pause before connecting to the database because it needs time drawing the loading text
         PauseTransition pause = new PauseTransition(Duration.millis(50));
         pause.setOnFinished(e -> {
-            if (connection == null) { // If not already connected
-                connection = connectToDatabase();
-            }
+            connection = connectToDatabase();
 
             try {
                 if (connection != null) { // Successful connection to the database
@@ -96,9 +94,7 @@ public class MenuController {
 
         PauseTransition pause = new PauseTransition(Duration.millis(50));
         pause.setOnFinished(e -> {
-            if (connection == null) { // If not already connected
-                connection = connectToDatabase();
-            }
+            connection = connectToDatabase();
 
             try {
                 if (connection != null) { // Successful connection to the database
@@ -147,10 +143,7 @@ public class MenuController {
 
         PauseTransition pause = new PauseTransition(Duration.millis(50));
         pause.setOnFinished(e -> {
-            // If not already connected
-            if (connection == null) {
-                connection = connectToDatabase();
-            }
+            connection = connectToDatabase();
 
             if (connection != null) { // Successful connection to the database
                 // Resets the logging table, when the user exits the app

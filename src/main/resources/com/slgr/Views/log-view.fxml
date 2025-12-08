@@ -13,7 +13,7 @@
    <children>
       <StackPane>
          <children>
-            <Label text="Info" textFill="WHITE">
+            <Label text="Log File" textFill="WHITE">
                <font>
                   <Font name="Rockwell Bold" size="80.0" />
                </font>

@@ -43,7 +43,7 @@ public class MenuController {
         }
 
         catch (SQLException e) {
-            return connection;
+            return null;
         }
     }
 
@@ -54,7 +54,9 @@ public class MenuController {
         // Small pause before connecting to the database because it needs time drawing the loading text
         PauseTransition pause = new PauseTransition(Duration.millis(50));
         pause.setOnFinished(e -> {
-            connection = connectToDatabase();
+            if (connection == null) {
+                connection = connectToDatabase();
+            }
 
             try {
                 if (connection != null) { // Successful connection to the database
@@ -94,7 +96,9 @@ public class MenuController {
 
         PauseTransition pause = new PauseTransition(Duration.millis(50));
         pause.setOnFinished(e -> {
-            connection = connectToDatabase();
+            if (connection == null) {
+                connection = connectToDatabase();
+            }
 
             try {
                 if (connection != null) { // Successful connection to the database
@@ -143,7 +147,9 @@ public class MenuController {
 
         PauseTransition pause = new PauseTransition(Duration.millis(50));
         pause.setOnFinished(e -> {
-            connection = connectToDatabase();
+            if (connection == null) {
+                connection = connectToDatabase();
+            }
 
             if (connection != null) { // Successful connection to the database
                 // Resets the logging table, when the user exits the app
@@ -151,12 +157,17 @@ public class MenuController {
                 try {
                     PreparedStatement statement = connection.prepareStatement(query);
                     statement.executeUpdate();
-                } catch (SQLException ex) {
+                    connection.close();
+                }
+
+                catch (SQLException ex) {
 
                 }
 
                 Platform.exit();
-            } else { // Unsuccessful connection
+            }
+
+            else { // Unsuccessful connection
                 Platform.exit();
             }
         });
